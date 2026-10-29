@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Regulatory Clause</label>
+    <pluralLabel>Regulatory Clauses</pluralLabel>
+    <description>76 clauses from 28 Indian regulatory instruments for AI governance</description>
+    <visibility>Public</visibility>
+</CustomObject>

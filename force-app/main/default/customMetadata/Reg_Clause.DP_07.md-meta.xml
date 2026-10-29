@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>DP_07</label>
+    <protected>false</protected>
+    <values>
+        <field>Applies_When__c</field>
+        <value xsi:type="xsd:string">data CONTAINS Personal</value>
+    </values>
+    <values>
+        <field>Binding_Status__c</field>
+        <value xsi:type="xsd:string">Binding</value>
+    </values>
+    <values>
+        <field>Effective_From__c</field>
+        <value xsi:type="xsd:date">2027-05-13</value>
+    </values>
+    <values>
+        <field>Evidence_Hint__c</field>
+        <value xsi:type="xsd:string">Retention and erasure job for transcripts</value>
+    </values>
+    <values>
+        <field>Evidence_Scope__c</field>
+        <value xsi:type="xsd:string">Use case</value>
+    </values>
+    <values>
+        <field>Evidence_Types__c</field>
+        <value xsi:type="xsd:string">metadata</value>
+    </values>
+    <values>
+        <field>Instrument__c</field>
+        <value xsi:type="xsd:string">Digital Personal Data Protection Act, 2023 and DPDP Rules, 2025 (G.S.R. 846(E))</value>
+    </values>
+    <values>
+        <field>Lens__c</field>
+        <value xsi:type="xsd:string">Compliance</value>
+    </values>
+    <values>
+        <field>Mentions_AI__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Obligation__c</field>
+        <value xsi:type="xsd:string">Erase data when consent is withdrawn or the purpose ends, unless a law requires keeping it, and make processors erase it too</value>
+    </values>
+    <values>
+        <field>Reference__c</field>
+        <value xsi:type="xsd:string">§8(7); §6(6)</value>
+    </values>
+    <values>
+        <field>Regulator__c</field>
+        <value xsi:type="xsd:string">MeitY</value>
+    </values>
+    <values>
+        <field>Source_URL__c</field>
+        <value xsi:type="xsd:string">https://www.meity.gov.in/static/uploads/2024/06/2bf1f0e9f04e6fb4f8fef35e82c42aa5.pdf</value>
+    </values>
+    <values>
+        <field>Verification_Tag__c</field>
+        <value xsi:type="xsd:string">P</value>
+    </values>
+</CustomMetadata>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Governance_Pack__c</fullName>
+    <label>Governance Pack</label>
+    <type>Lookup</type>
+    <referenceTo>Governance_Pack__c</referenceTo>
+    <relationshipName>LearningEvents</relationshipName>
+    <relationshipLabel>Learning Events</relationshipLabel>
+    <required>false</required>
+</CustomField>

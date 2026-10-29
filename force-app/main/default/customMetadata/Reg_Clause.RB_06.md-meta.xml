@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>RB_06</label>
+    <protected>false</protected>
+    <values>
+        <field>Applies_When__c</field>
+        <value xsi:type="xsd:string">regulators CONTAINS RBI AND audience = Customer AND function IN (Origination, Deposits, Wealth, InsuranceSales)</value>
+    </values>
+    <values>
+        <field>Binding_Status__c</field>
+        <value xsi:type="xsd:string">Binding</value>
+    </values>
+    <values>
+        <field>Effective_From__c</field>
+        <value xsi:type="xsd:date">2027-01-01</value>
+    </values>
+    <values>
+        <field>Evidence_Hint__c</field>
+        <value xsi:type="xsd:string">Consent records; suitability step; UI tests</value>
+    </values>
+    <values>
+        <field>Evidence_Scope__c</field>
+        <value xsi:type="xsd:string">Use case</value>
+    </values>
+    <values>
+        <field>Evidence_Types__c</field>
+        <value xsi:type="xsd:string">policy;consent;test</value>
+    </values>
+    <values>
+        <field>Instrument__c</field>
+        <value xsi:type="xsd:string">RBC Directions 2025, Second Amendment, Section F (RBI/2026-27/115)</value>
+    </values>
+    <values>
+        <field>Legacy_Citation__c</field>
+        <value xsi:type="xsd:string">Fair Practices Code and customer-service master circulars; recovery-agent circular (2022)</value>
+    </values>
+    <values>
+        <field>Lens__c</field>
+        <value xsi:type="xsd:string">Compliance</value>
+    </values>
+    <values>
+        <field>Mentions_AI__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Obligation__c</field>
+        <value xsi:type="xsd:string">When selling: explicit, recorded consent; calls only 09:00–19:00; a suitability assessment before the sale; no dark patterns</value>
+    </values>
+    <values>
+        <field>Reference__c</field>
+        <value xsi:type="xsd:string">Second Amendment, Section F: ¶85G, ¶85N(4), ¶85P, ¶85X</value>
+    </values>
+    <values>
+        <field>Regulator__c</field>
+        <value xsi:type="xsd:string">RBI</value>
+    </values>
+    <values>
+        <field>Source_URL__c</field>
+        <value xsi:type="xsd:string">https://rbidocs.rbi.org.in/rdocs/notification/PDFs/1NOTI1159FE64C67CBFC4483828513EE93480433.PDF</value>
+    </values>
+    <values>
+        <field>Verification_Tag__c</field>
+        <value xsi:type="xsd:string">P, I</value>
+    </values>
+</CustomMetadata>

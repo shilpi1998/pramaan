@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Sends payment reminder via SMS, email or WhatsApp based on customer communication preference</description>
+    <invocationTarget>SendReminderAction</invocationTarget>
+    <invocationTargetType>Apex</invocationTargetType>
+    <masterLabel>Send Payment Reminder</masterLabel>
+</GenAiFunction>

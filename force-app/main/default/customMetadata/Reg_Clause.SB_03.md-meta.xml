@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>SB_03</label>
+    <protected>false</protected>
+    <values>
+        <field>Applies_When__c</field>
+        <value xsi:type="xsd:string">regulators CONTAINS SEBI</value>
+    </values>
+    <values>
+        <field>Binding_Status__c</field>
+        <value xsi:type="xsd:string">Binding</value>
+    </values>
+    <values>
+        <field>Effective_From__c</field>
+        <value xsi:type="xsd:date">2024-08-20</value>
+    </values>
+    <values>
+        <field>Evidence_Hint__c</field>
+        <value xsi:type="xsd:string">Region; transcript storage; runbook</value>
+    </values>
+    <values>
+        <field>Evidence_Scope__c</field>
+        <value xsi:type="xsd:string">Use case</value>
+    </values>
+    <values>
+        <field>Evidence_Types__c</field>
+        <value xsi:type="xsd:string">metadata;policy</value>
+    </values>
+    <values>
+        <field>Instrument__c</field>
+        <value xsi:type="xsd:string">Cybersecurity and Cyber Resilience Framework (SEBI/HO/ITD-1/ITD_CSC_EXT/P/CIR/2024/113)</value>
+    </values>
+    <values>
+        <field>Lens__c</field>
+        <value xsi:type="xsd:string">Security</value>
+    </values>
+    <values>
+        <field>Mentions_AI__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Obligation__c</field>
+        <value xsi:type="xsd:string">Keep regulatory data, including investor chats, in India; have SOPs for GenAI security; report incidents to SEBI and CERT-In within 6 hours</value>
+    </values>
+    <values>
+        <field>Reference__c</field>
+        <value xsi:type="xsd:string">CSCRF (20 Aug 2024)</value>
+    </values>
+    <values>
+        <field>Regulator__c</field>
+        <value xsi:type="xsd:string">SEBI</value>
+    </values>
+    <values>
+        <field>Source_URL__c</field>
+        <value xsi:type="xsd:string">https://www.sebi.gov.in/sebi_data/attachdocs/aug-2024/1724326790365.pdf</value>
+    </values>
+    <values>
+        <field>Verification_Tag__c</field>
+        <value xsi:type="xsd:string">P</value>
+    </values>
+</CustomMetadata>

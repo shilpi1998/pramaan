@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Mapping_Status__c</fullName>
+    <label>Mapping Status</label>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+                <value><fullName>Met</fullName><default>false</default></value>
+                <value><fullName>Partial</fullName><default>false</default></value>
+                <value><fullName>Gap</fullName><default>false</default></value>
+                <value><fullName>Inherited</fullName><default>false</default></value>
+                <value><fullName>N/A</fullName><default>false</default></value>
+                <value><fullName>Risk Accepted</fullName><default>false</default></value>
+        </valueSetDefinition>
+    </valueSet>
+    <required>false</required>
+</CustomField>

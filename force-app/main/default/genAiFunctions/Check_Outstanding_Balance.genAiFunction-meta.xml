@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Retrieves outstanding loan balance, overdue amount and days past due for account</description>
+    <invocationTarget>CheckOutstandingAction</invocationTarget>
+    <invocationTargetType>Apex</invocationTargetType>
+    <masterLabel>Check Outstanding Balance</masterLabel>
+</GenAiFunction>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Governance_Pack__c</fullName>
+    <label>Governance Pack</label>
+    <referenceTo>Governance_Pack__c</referenceTo>
+    <relationshipLabel>Filing Documents</relationshipLabel>
+    <relationshipName>Filing_Documents</relationshipName>
+    <type>Lookup</type>
+    <required>false</required>
+    <deleteConstraint>SetNull</deleteConstraint>
+</CustomField>

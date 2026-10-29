@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>CT_08</label>
+    <protected>false</protected>
+    <values>
+        <field>Applies_When__c</field>
+        <value xsi:type="xsd:string">regulators CONTAINS RBI</value>
+    </values>
+    <values>
+        <field>Binding_Status__c</field>
+        <value xsi:type="xsd:string">Binding</value>
+    </values>
+    <values>
+        <field>Effective_From__c</field>
+        <value xsi:type="xsd:date">2026-07-31</value>
+    </values>
+    <values>
+        <field>Evidence_Hint__c</field>
+        <value xsi:type="xsd:string">Incident runbook with a 6-hour clock</value>
+    </values>
+    <values>
+        <field>Evidence_Scope__c</field>
+        <value xsi:type="xsd:string">Bank</value>
+    </values>
+    <values>
+        <field>Evidence_Types__c</field>
+        <value xsi:type="xsd:string">policy</value>
+    </values>
+    <values>
+        <field>Instrument__c</field>
+        <value xsi:type="xsd:string">Commercial Banks – Cybersecurity, Technology: Risk, Resilience and Assurance Framework Directions, 2026 (RBI/DoS/2026-27/410)</value>
+    </values>
+    <values>
+        <field>Legacy_Citation__c</field>
+        <value xsi:type="xsd:string">IT Governance, Risk, Controls and Assurance Practices MD (Nov 2023); Cyber Security Framework in Banks (Jun 2016)</value>
+    </values>
+    <values>
+        <field>Lens__c</field>
+        <value xsi:type="xsd:string">Security</value>
+    </values>
+    <values>
+        <field>Mentions_AI__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Obligation__c</field>
+        <value xsi:type="xsd:string">Report cyber incidents to RBI on DAKSH within 6 hours of detection, and notify CERT-In</value>
+    </values>
+    <values>
+        <field>Reference__c</field>
+        <value xsi:type="xsd:string">¶182</value>
+    </values>
+    <values>
+        <field>Regulator__c</field>
+        <value xsi:type="xsd:string">RBI</value>
+    </values>
+    <values>
+        <field>Source_URL__c</field>
+        <value xsi:type="xsd:string">https://rbidocs.rbi.org.in/rdocs/notification/PDFs/410MD1C1DD4C43C9C49ED9033D64902636D9C.PDF</value>
+    </values>
+    <values>
+        <field>Verification_Tag__c</field>
+        <value xsi:type="xsd:string">P</value>
+    </values>
+</CustomMetadata>

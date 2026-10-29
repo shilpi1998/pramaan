@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>FA_01</label>
+    <protected>false</protected>
+    <values>
+        <field>Applies_When__c</field>
+        <value xsi:type="xsd:string">regulators CONTAINS RBI</value>
+    </values>
+    <values>
+        <field>Binding_Status__c</field>
+        <value xsi:type="xsd:string">Non-binding</value>
+    </values>
+    <values>
+        <field>Effective_From__c</field>
+        <value xsi:type="xsd:date">2025-08-13</value>
+    </values>
+    <values>
+        <field>Evidence_Hint__c</field>
+        <value xsi:type="xsd:string">Bank AI policy; the tier and its factors (risk engine)</value>
+    </values>
+    <values>
+        <field>Evidence_Scope__c</field>
+        <value xsi:type="xsd:string">Bank</value>
+    </values>
+    <values>
+        <field>Evidence_Types__c</field>
+        <value xsi:type="xsd:string">policy</value>
+    </values>
+    <values>
+        <field>Instrument__c</field>
+        <value xsi:type="xsd:string">FREE-AI Committee Report (Framework for Responsible and Ethical Enablement of AI)</value>
+    </values>
+    <values>
+        <field>Lens__c</field>
+        <value xsi:type="xsd:string">Risk</value>
+    </values>
+    <values>
+        <field>Mentions_AI__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Obligation__c</field>
+        <value xsi:type="xsd:string">Have a board-approved AI policy with risk tiers: customer chatbots at least medium; autonomous customer-facing, fund-moving or credit-underwriting systems high</value>
+    </values>
+    <values>
+        <field>Reference__c</field>
+        <value xsi:type="xsd:string">Rec 14 (¶4.4.43–4.4.46; Annex V)</value>
+    </values>
+    <values>
+        <field>Regulator__c</field>
+        <value xsi:type="xsd:string">RBI</value>
+    </values>
+    <values>
+        <field>Source_URL__c</field>
+        <value xsi:type="xsd:string">https://rbidocs.rbi.org.in/rdocs/PublicationReport/Pdfs/FREEAIR130820250A24FF2D4578453F824C72ED9F5D5851.PDF</value>
+    </values>
+    <values>
+        <field>Verification_Tag__c</field>
+        <value xsi:type="xsd:string">P</value>
+    </values>
+</CustomMetadata>

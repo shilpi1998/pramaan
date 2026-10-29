@@ -1,0 +1,61 @@
+<template>
+    <div class="pramaan-app">
+        <div class="slds-page-header slds-page-header_joined">
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-title">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <lightning-icon icon-name="standard:shield" size="large"></lightning-icon>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title">Pramaan</h1>
+                            <p class="slds-page-header__meta-text">Proof, not paperwork &mdash; AI Governance Filing System</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <lightning-tabset variant="scoped" active-tab-value={activeTab} onactive={handleTabChange}>
+            <lightning-tab label="Governance Hub" value="hub" icon-name="standard:dashboard">
+                <c-pramaan-mission-control onlaunchflow={handleLaunchFlow}></c-pramaan-mission-control>
+            </lightning-tab>
+            <lightning-tab label="Agent X-Ray" value="xray" icon-name="standard:scan_card">
+                <c-pramaan-x-ray-scanner onxraycomplete={handleXRayComplete}></c-pramaan-x-ray-scanner>
+            </lightning-tab>
+            <lightning-tab label="Risk Assessment" value="assess" icon-name="standard:task2">
+                <c-pramaan-assess
+                    use-case-id={selectedUseCaseId}
+                    snapshot-id={selectedSnapshotId}
+                    onassesscomplete={handleAssessComplete}>
+                </c-pramaan-assess>
+            </lightning-tab>
+            <lightning-tab label="Compliance Map" value="map" icon-name="standard:entitlement">
+                <c-pramaan-compliance-map
+                    pack-id={selectedPackId}
+                    use-case-id={selectedUseCaseId}
+                    ongeneratecomplete={handleGenerateComplete}
+                    onfilecomplete={handleFileComplete}>
+                </c-pramaan-compliance-map>
+            </lightning-tab>
+            <lightning-tab label="Filing Documents" value="filing" icon-name="standard:document">
+                <c-pramaan-filing-center pack-id={selectedPackId}></c-pramaan-filing-center>
+            </lightning-tab>
+            <lightning-tab label="Review Gates" value="review" icon-name="standard:approval">
+                <c-pramaan-reviewer-lens pack-id={selectedPackId}></c-pramaan-reviewer-lens>
+            </lightning-tab>
+            <lightning-tab label="Compliance Passport" value="passport" icon-name="standard:endorsement">
+                <c-pramaan-go-live-passport pack-id={selectedPackId}></c-pramaan-go-live-passport>
+            </lightning-tab>
+            <lightning-tab label="Audit Trail" value="audit" icon-name="standard:record_lookup">
+                <c-pramaan-audit-trail pack-id={selectedPackId}></c-pramaan-audit-trail>
+            </lightning-tab>
+            <lightning-tab label="Learning Loop" value="learning" icon-name="standard:loop">
+                <c-pramaan-learning-loop pack-id={selectedPackId}></c-pramaan-learning-loop>
+            </lightning-tab>
+            <lightning-tab label="Regulation Library" value="regs" icon-name="standard:education">
+                <c-pramaan-reg-library></c-pramaan-reg-library>
+            </lightning-tab>
+        </lightning-tabset>
+    </div>
+</template>

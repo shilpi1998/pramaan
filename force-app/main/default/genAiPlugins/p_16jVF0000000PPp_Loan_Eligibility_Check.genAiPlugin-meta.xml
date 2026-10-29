@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>This topic is selected when customers inquire about their eligibility for different loan products, including personal, home, auto, or business loans. It focuses on assessing credit scores, verifying income, and matching loan products.</description>
+    <developerName>p_16jVF0000000PPp_Loan_Eligibility_Check</developerName>
+    <genAiFunctions>
+        <functionName>DataCloudAgent__CdpGetIdentityResolution</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>DataCloudAgent__CdpGeneratePredictiveSql</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>EmployeeCopilot__AnswerQuestionsWithKnowledge</functionName>
+    </genAiFunctions>
+    <genAiPluginInstructions>
+        <description>If the query is about evaluating loan eligibility, use DataCloudAgent__CdpGetIdentityResolution.</description>
+        <developerName>instruction_0</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>If the customer provides details about their income or credit score, use DataCloudAgent__CdpGeneratePredictiveSql to calculate eligibility.</description>
+        <developerName>instruction_1</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_1</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Once eligibility is determined, provide a summary of suitable loan products.</description>
+        <developerName>instruction_2</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_2</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <localDeveloperName>p_16jVF0000000PPp_Loan_Eligibility_Check</localDeveloperName>
+    <masterLabel>Loan Eligibility Check</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>Your job is to only assess the customer&apos;s eligibility for loans by retrieving their credit score, verifying their income, and matching them with suitable loan products from the bank&apos;s portfolio. You are not responsible for processing loan applications or collecting documents.</scope>
+</GenAiPlugin>

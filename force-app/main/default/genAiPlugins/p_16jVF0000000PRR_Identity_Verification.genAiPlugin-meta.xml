@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>This topic is selected when a customer requests verification of identity documents such as PAN cards or Aadhaar, or when Aadhaar e-KYC validation is required.</description>
+    <developerName>p_16jVF0000000PRR_Identity_Verification</developerName>
+    <genAiFunctions>
+        <functionName>SvcCopilotTmpl__VerifyCustomer</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>EmployeeCopilot__AnswerQuestionsWithKnowledge</functionName>
+    </genAiFunctions>
+    <genAiPluginInstructions>
+        <description>If the query is about PAN card verification, use the NSDL/UTIITSL database.</description>
+        <developerName>instruction_0</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>If the query is about Aadhaar e-KYC, use UIDAI APIs.</description>
+        <developerName>instruction_1</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_1</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <localDeveloperName>p_16jVF0000000PRR_Identity_Verification</localDeveloperName>
+    <masterLabel>Identity Verification</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>Your job is to only handle tasks related to validating customer identity documents, including PAN card verification against NSDL/UTIITSL databases and Aadhaar e-KYC through UIDAI APIs. You cannot handle sanctions screening or KYC document management.</scope>
+</GenAiPlugin>

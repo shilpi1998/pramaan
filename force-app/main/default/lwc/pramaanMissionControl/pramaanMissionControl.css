@@ -1,0 +1,20 @@
+.stat-card {
+    text-align: center;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+}
+.stat-label {
+    font-size: 0.85rem;
+    color: #666;
+    text-transform: uppercase;
+}
+.stat-card.draft { border-left: 4px solid #999; }
+.stat-card.scanning { border-left: 4px solid #1b96ff; }
+.stat-card.review { border-left: 4px solid #ff9a3c; }
+.stat-card.approved { border-left: 4px solid #2e844a; }
+.stat-card.rejected { border-left: 4px solid #c23934; }

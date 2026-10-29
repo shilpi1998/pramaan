@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>This topic is selected when customers need to submit or validate documents required for loan processing, such as identity proof, address proof, income documents, or property papers.</description>
+    <developerName>p_16jVF0000000PPp_Document_Collection</developerName>
+    <genAiFunctions>
+        <functionName>AdminCopilot__ExecuteMetadataUpdate</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>AdminCopilot__SetupGeneralKnowledgeGrounding</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>EmployeeCopilot__AnswerQuestionsWithKnowledge</functionName>
+    </genAiFunctions>
+    <genAiPluginInstructions>
+        <description>If the customer provides a document for validation, use AdminCopilot__ExecuteMetadataUpdate.</description>
+        <developerName>instruction_0</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>If the customer inquires about required documents, use AdminCopilot__SetupGeneralKnowledgeGrounding to provide relevant information.</description>
+        <developerName>instruction_1</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_1</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Once documents are validated, confirm the completion status to the customer.</description>
+        <developerName>instruction_2</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_2</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <localDeveloperName>p_16jVF0000000PPp_Document_Collection</localDeveloperName>
+    <masterLabel>Document Collection</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>Your job is to only assist customers in collecting and validating documents required for loan processing. You are not responsible for assessing eligibility or performing credit risk analysis.</scope>
+</GenAiPlugin>

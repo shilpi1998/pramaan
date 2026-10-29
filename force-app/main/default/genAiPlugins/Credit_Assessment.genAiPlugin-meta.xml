@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Performs detailed credit risk assessment including EMI affordability calculation and credit bureau analysis</description>
+    <genAiFunctions>
+        <functionName>Check_Credit_Score</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>Calculate_EMI</functionName>
+    </genAiFunctions>
+    <masterLabel>Credit Assessment</masterLabel>
+    <scope>Perform credit risk assessment for a loan application. Check the applicant credit score and calculate EMI to determine affordability. Provide a risk recommendation.</scope>
+</GenAiPlugin>

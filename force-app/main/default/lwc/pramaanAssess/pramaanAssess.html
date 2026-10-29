@@ -1,0 +1,319 @@
+<template>
+    <lightning-card title="Risk Assessment" icon-name="standard:task2">
+        <div class="slds-p-around_medium">
+            <!-- No use case selected -->
+            <template if:false={useCaseId}>
+                <div class="slds-illustration slds-illustration_small slds-text-align_center slds-p-around_large">
+                    <p class="slds-text-heading_small">Select an agent from the Governance Hub to begin risk assessment.</p>
+                </div>
+            </template>
+
+            <template if:true={useCaseId}>
+                <!-- Loading -->
+                <template if:true={isLoading}>
+                    <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+                </template>
+
+                <template if:false={isLoading}>
+                    <!-- Step 1: Agent DNA Review -->
+                    <template if:false={assessmentComplete}>
+                        <h2 class="slds-text-heading_medium slds-m-bottom_small">Agent Applicability DNA</h2>
+                        <p class="slds-text-body_regular slds-m-bottom_medium slds-text-color_weak">
+                            These 9 attributes determine which of 76 regulatory clauses apply to this agent and its risk tier.
+                            Review and edit before running the assessment.
+                        </p>
+
+                        <!-- DNA Grid -->
+                        <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_medium">
+                            <div class="slds-col slds-size_1-of-3 slds-p-bottom_small">
+                                <lightning-combobox
+                                    label="Sub-Sector"
+                                    value={dna.subSector}
+                                    options={subSectorOptions}
+                                    onchange={handleDnaChange}
+                                    data-field="subSector"
+                                    disabled={isEditing}>
+                                </lightning-combobox>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3 slds-p-bottom_small">
+                                <lightning-combobox
+                                    label="Decision Impact"
+                                    value={dna.decisionImpact}
+                                    options={decisionImpactOptions}
+                                    onchange={handleDnaChange}
+                                    data-field="decisionImpact"
+                                    disabled={isEditing}>
+                                </lightning-combobox>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3 slds-p-bottom_small">
+                                <lightning-combobox
+                                    label="Human Oversight Level"
+                                    value={dna.autonomy}
+                                    options={autonomyOptions}
+                                    onchange={handleDnaChange}
+                                    data-field="autonomy"
+                                    disabled={isEditing}>
+                                </lightning-combobox>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3 slds-p-bottom_small">
+                                <lightning-combobox
+                                    label="Audience"
+                                    value={dna.audience}
+                                    options={audienceOptions}
+                                    onchange={handleDnaChange}
+                                    data-field="audience"
+                                    disabled={isEditing}>
+                                </lightning-combobox>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3 slds-p-bottom_small">
+                                <lightning-combobox
+                                    label="Function"
+                                    value={dna.func}
+                                    options={functionOptions}
+                                    onchange={handleDnaChange}
+                                    data-field="func"
+                                    disabled={isEditing}>
+                                </lightning-combobox>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3 slds-p-bottom_small">
+                                <lightning-input
+                                    label="Data Categories"
+                                    value={dna.dataCategories}
+                                    onchange={handleDnaChange}
+                                    data-field="dataCategories"
+                                    placeholder="PII, Financial, Aadhaar..."
+                                    disabled={isEditing}>
+                                </lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3 slds-p-bottom_small">
+                                <lightning-input
+                                    label="Channels"
+                                    value={dna.channels}
+                                    onchange={handleDnaChange}
+                                    data-field="channels"
+                                    placeholder="Web, Mobile, WhatsApp..."
+                                    disabled={isEditing}>
+                                </lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3 slds-p-bottom_small">
+                                <lightning-input
+                                    type="checkbox"
+                                    label="Vulnerable Customers"
+                                    checked={dna.vulnerable}
+                                    onchange={handleVulnerableChange}
+                                    disabled={isEditing}>
+                                </lightning-input>
+                            </div>
+                        </div>
+
+                        <!-- How Pramaan Scores -->
+                        <div class="slds-box scoring-explainer slds-m-bottom_medium">
+                            <h3 class="slds-text-heading_small slds-m-bottom_small">How Pramaan Scores Risk</h3>
+                            <div class="slds-grid slds-gutters slds-wrap">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                        <thead>
+                                            <tr>
+                                                <th>Factor</th>
+                                                <th>Points</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>Audience</td><td>Employee=0, Partner=1, Customer=3</td></tr>
+                                            <tr><td>Decision Impact</td><td>Info=0, Advisory=1, Decisioning/Transactional=3</td></tr>
+                                            <tr><td>Human Oversight Level</td><td>Human-in-loop=0, Human-on-loop=1, Autonomous=3</td></tr>
+                                            <tr><td>Data Sensitivity</td><td>None=0, Employee=1, Personal=2, Financial/Aadhaar/Health=3</td></tr>
+                                            <tr><td>Vulnerable Customers</td><td>No=0, Yes=2</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <div class="slds-p-left_medium">
+                                        <p class="slds-text-body_small slds-m-bottom_small"><strong>Tier Bands (0-21 pts):</strong></p>
+                                        <div class="tier-band tier-low">Low: 0-5 pts — 2 review gates</div>
+                                        <div class="tier-band tier-medium">Medium: 6-10 pts — 4 review gates</div>
+                                        <div class="tier-band tier-high">High: 11-15 pts — 5 review gates</div>
+                                        <div class="tier-band tier-critical">Critical: 16-21 pts — 5 gates + board escalation</div>
+                                        <p class="slds-text-body_small slds-m-top_small slds-text-color_weak">
+                                            <strong>Floors:</strong> FREE-AI Rec 14 applies minimum tiers for customer-facing and autonomous agents.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Einstein AI Status -->
+                        <div class="slds-box slds-m-top_medium slds-m-bottom_small llm-config-box">
+                            <div class="slds-grid slds-grid_vertical-align-center slds-gutters">
+                                <div class="slds-col slds-grow">
+                                    <div class="slds-grid slds-grid_vertical-align-center">
+                                        <lightning-icon icon-name="utility:einstein" size="small" class="slds-m-right_x-small"></lightning-icon>
+                                        <span class="slds-text-body_regular"><strong>Pramaan AI Engine</strong> — Real-time regulatory analysis powered by Salesforce AI Platform</span>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-no-flex">
+                                    <span class="slds-badge slds-theme_success slds-m-left_small">AI Connected</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Save & Assess buttons -->
+                        <div class="slds-grid slds-grid_align-spread slds-m-top_medium">
+                            <lightning-button
+                                label="Save DNA Changes"
+                                variant="neutral"
+                                icon-name="utility:save"
+                                onclick={saveDnaChanges}>
+                            </lightning-button>
+                            <lightning-button
+                                label="Run Risk Assessment"
+                                variant="brand"
+                                icon-name="utility:trending"
+                                onclick={submitAssessment}>
+                            </lightning-button>
+                        </div>
+                    </template>
+
+                    <!-- Step 2: Assessment Result -->
+                    <template if:true={assessmentComplete}>
+                        <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                            <!-- Risk Badge -->
+                            <div class="slds-col slds-size_1-of-4 slds-align_absolute-center">
+                                <div class={riskTierClass}>
+                                    <div class="risk-score">{riskResult.score}</div>
+                                    <div class="risk-label">{riskResult.tier}</div>
+                                    <div class="risk-sublabel">Risk Score (0-21)</div>
+                                </div>
+                            </div>
+
+                            <!-- Factor Breakdown -->
+                            <div class="slds-col slds-size_3-of-4">
+                                <h3 class="slds-text-heading_small slds-m-bottom_small">Risk Contribution Breakdown</h3>
+                                <template for:each={riskFactors} for:item="f">
+                                    <div key={f.factor} class="factor-row">
+                                        <div class="slds-grid slds-grid_vertical-align-center slds-m-bottom_xx-small">
+                                            <div class="slds-col slds-size_1-of-3">
+                                                <strong>{f.factor}</strong>
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-3 slds-text-color_weak">
+                                                {f.value}
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-3 slds-text-align_right">
+                                                <span class="factor-pts">{f.points}/{f.maxPoints}</span>
+                                            </div>
+                                        </div>
+                                        <div class="factor-bar-track">
+                                            <div class={f.barClass} style={f.barStyle}></div>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <!-- Floors -->
+                                <template if:true={hasFloors}>
+                                    <div class="slds-m-top_small">
+                                        <template for:each={riskResult.floors} for:item="floor">
+                                            <div key={floor} class="floor-badge">
+                                                <lightning-icon icon-name="utility:warning" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                                                {floor}
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                <!-- Hard Triggers -->
+                                <template if:true={hasHardTriggers}>
+                                    <div class="slds-m-top_small">
+                                        <template for:each={riskResult.hardTriggers} for:item="trig">
+                                            <div key={trig} class="trigger-badge">
+                                                <lightning-icon icon-name="utility:error" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                                                {trig}
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- AI Regulatory Analysis -->
+                        <template if:true={hasLLMAnalysis}>
+                            <div class="slds-m-top_large">
+                                <div class="ai-analysis-header slds-m-bottom_small">
+                                    <div class="slds-grid slds-grid_vertical-align-center">
+                                        <lightning-icon icon-name={llmSourceIcon} size="small" class="slds-m-right_small"></lightning-icon>
+                                        <h3 class="slds-text-heading_small">{llmSourceLabel}</h3>
+                                        <div class="slds-col slds-no-flex slds-m-left_medium">
+                                            <span class="slds-badge slds-badge_inverse">{applicableRegCount}/7 Regulators</span>
+                                            <span class="slds-badge slds-m-left_xx-small">{totalEstimatedClauses} Est. Clauses</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Summary -->
+                                <div class="slds-box ai-summary slds-m-bottom_medium">
+                                    <p class="slds-text-body_regular">{llmAnalysis.summary}</p>
+                                </div>
+
+                                <!-- Regulator Cards -->
+                                <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_medium">
+                                    <template for:each={llmAnalysis.regulators} for:item="reg">
+                                        <div key={reg.regulator} class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                            <div class="reg-card">
+                                                <div class="slds-grid slds-grid_vertical-align-center slds-m-bottom_x-small">
+                                                    <strong class="slds-text-title_caps">{reg.regulator}</strong>
+                                                    <span class="slds-text-body_small slds-text-color_weak slds-m-left_x-small">{reg.fullName}</span>
+                                                    <div class="slds-col slds-no-flex slds-m-left_medium">
+                                                        <span class={reg.badgeClass}>{reg.applicability}</span>
+                                                    </div>
+                                                </div>
+                                                <p class="slds-text-body_small reg-reasoning">{reg.reasoning}</p>
+                                                <div class="slds-grid slds-m-top_x-small">
+                                                    <span class="slds-text-body_small slds-text-color_weak">{reg.estimatedClauses} clauses</span>
+                                                    <span class={reg.confClass}>{reg.confidence} confidence</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+
+                                <!-- Key Risks -->
+                                <template if:true={hasKeyRisks}>
+                                    <h3 class="slds-text-heading_small slds-m-bottom_small">Key Regulatory Risks</h3>
+                                    <div class="slds-box ai-risks slds-m-bottom_medium">
+                                        <template for:each={llmAnalysis.keyRisks} for:item="risk">
+                                            <div key={risk} class="risk-item">
+                                                <lightning-icon icon-name="utility:warning" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                                <span>{risk}</span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                <!-- Recommendation -->
+                                <div class="slds-box ai-recommendation slds-m-bottom_medium">
+                                    <h4 class="slds-text-title_caps slds-m-bottom_xx-small">Governance Recommendation</h4>
+                                    <p class="slds-text-body_regular">{llmAnalysis.recommendation}</p>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Actions -->
+                        <div class="slds-grid slds-grid_align-spread slds-m-top_medium">
+                            <lightning-button
+                                label="Edit DNA & Re-Assess"
+                                variant="neutral"
+                                icon-name="utility:back"
+                                onclick={goBackToEdit}>
+                            </lightning-button>
+                            <lightning-button
+                                label="Create Governance Pack & Map Clauses"
+                                variant="brand"
+                                icon-name="utility:forward"
+                                onclick={createPackAndMap}>
+                            </lightning-button>
+                        </div>
+                    </template>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>

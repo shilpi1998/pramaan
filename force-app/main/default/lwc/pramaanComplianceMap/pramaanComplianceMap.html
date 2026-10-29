@@ -1,0 +1,308 @@
+<template>
+    <lightning-card title="Compliance Map" icon-name="standard:entitlement">
+        <div class="slds-p-around_medium">
+            <div class="content-wrapper">
+                <template if:true={isLoading}>
+                    <div class="loading-overlay">
+                        <div class="loading-box">
+                            <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+                            <template if:true={isGenerating}>
+                                <p class="slds-m-top_small slds-text-align_center">{generatingLabel}</p>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                <template if:true={hasMappings}>
+                    <!-- Summary Stats -->
+                    <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                        <div class="slds-col slds-size_1-of-4">
+                            <div class="clause-stat applicable">
+                                <div class="stat-number">{applicableCount}</div>
+                                <div class="stat-label">Applicable Clauses</div>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                            <div class="clause-stat met">
+                                <div class="stat-number">{metCount}</div>
+                                <div class="stat-label">Met</div>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                            <div class="clause-stat gap">
+                                <div class="stat-number">{gapCount}</div>
+                                <div class="stat-label">Gaps</div>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                            <div class="clause-stat total">
+                                <div class="stat-number">{regulatorGroupCount}</div>
+                                <div class="stat-label">Regulators</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Overall Progress -->
+                    <div class="slds-box slds-m-bottom_medium progress-box">
+                        <div class="slds-grid slds-grid_vertical-align-center">
+                            <div class="slds-col slds-grow">
+                                <span class="slds-text-body_regular"><strong>Compliance Progress</strong></span>
+                                <div class="progress-bar-container slds-m-top_xx-small">
+                                    <div class="progress-bar-fill" style={progressStyle}></div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-no-flex slds-m-left_medium">
+                                <span class="slds-text-heading_small"><strong>{completionPercent}%</strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Regulator Groups -->
+                    <template for:each={regulatorGroups} for:item="group">
+                        <div key={group.key} class="slds-m-bottom_small reg-group">
+                            <div class={group.headerClass} data-regulator={group.regulator} onclick={handleRegulatorToggle}>
+                                <div class="slds-grid slds-grid_vertical-align-center">
+                                    <div class="slds-col slds-grow">
+                                        <div class="slds-grid slds-grid_vertical-align-center">
+                                            <span class="reg-arrow">{group.arrow}</span>
+                                            <span class="slds-text-heading_small slds-m-left_x-small"><strong>{group.regulator}</strong></span>
+                                            <span class="slds-badge slds-m-left_small">{group.count} clauses</span>
+                                            <template if:true={group.gapCount}>
+                                                <span class="slds-badge slds-theme_error slds-m-left_xx-small">{group.gapCount} gaps</span>
+                                            </template>
+                                        </div>
+                                        <div class="slds-text-body_small slds-text-color_weak slds-m-left_large">{group.summaryLabel}</div>
+                                    </div>
+                                    <div class="slds-col slds-no-flex slds-size_1-of-6">
+                                        <div class={group.progressClass}>
+                                            <div class="reg-progress-fill" style={group.progressStyle}></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <template if:true={group.isExpanded}>
+                                <div class="reg-group-body">
+                                    <template for:each={group.clauses} for:item="clause">
+                                        <div key={clause.Id} class="clause-row">
+                                            <div class="slds-grid slds-gutters_x-small">
+                                                <div class="slds-col slds-size_7-of-12">
+                                                    <div class="clause-ref">
+                                                        <span class="slds-badge slds-badge_lightest slds-m-right_xx-small">{clause.Clause_Reference__c}</span>
+                                                        <span class={clause.statusBadgeClass}>{clause.Mapping_Status__c}</span>
+                                                    </div>
+                                                    <div class="clause-obligation">{clause.obligationText}</div>
+                                                    <template if:true={clause.Evidence_Hint__c}>
+                                                        <div class="clause-hint">
+                                                            <lightning-icon icon-name="utility:info" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                                                            Evidence needed: {clause.Evidence_Hint__c}
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                                <div class="slds-col slds-size_3-of-12">
+                                                    <template if:true={clause.hasEvidence}>
+                                                        <div class="evidence-provided">
+                                                            <lightning-icon icon-name="utility:check" size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                                                            Evidence provided
+                                                        </div>
+                                                    </template>
+                                                    <template if:false={clause.hasEvidence}>
+                                                        <div class="evidence-missing-label">No evidence yet</div>
+                                                    </template>
+                                                </div>
+                                                <div class="slds-col slds-size_2-of-12 slds-text-align_right">
+                                                    <lightning-button-group>
+                                                        <lightning-button-icon
+                                                            icon-name="utility:edit"
+                                                            alternative-text="Add Evidence"
+                                                            title="Add Evidence"
+                                                            size="small"
+                                                            data-id={clause.Id}
+                                                            onclick={handleAddEvidence}>
+                                                        </lightning-button-icon>
+                                                        <lightning-button-icon
+                                                            icon-name="utility:check"
+                                                            alternative-text="Mark Met"
+                                                            title="Mark Met"
+                                                            size="small"
+                                                            variant="brand"
+                                                            data-id={clause.Id}
+                                                            onclick={handleMarkMet}>
+                                                        </lightning-button-icon>
+                                                    </lightning-button-group>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+
+                    <!-- Filing Templates -->
+                    <template if:true={hasReadiness}>
+                        <div class="slds-m-top_large slds-m-bottom_medium">
+                            <h3 class="slds-text-heading_small slds-m-bottom_small"><strong>Filing Documents to Generate</strong></h3>
+
+                            <div class="slds-grid slds-gutters slds-m-bottom_small">
+                                <div class="slds-col slds-size_1-of-3">
+                                    <div class="fc-stat">
+                                        <div class="fc-stat-num">{requiredCount}</div>
+                                        <div class="fc-stat-label">Required Templates</div>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-3">
+                                    <div class="fc-stat fc-stat-done">
+                                        <div class="fc-stat-num">{generatedCount}</div>
+                                        <div class="fc-stat-label">Generated</div>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-3">
+                                    <div class="fc-stat fc-stat-pending">
+                                        <div class="fc-stat-num">{pendingCount}</div>
+                                        <div class="fc-stat-label">Pending</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <template if:false={allRequiredDone}>
+                                <div class="slds-m-bottom_small">
+                                    <lightning-button
+                                        label="Generate All Required Documents"
+                                        variant="brand"
+                                        icon-name="utility:magicwand"
+                                        onclick={handleGenerateAll}>
+                                    </lightning-button>
+                                    <span class="slds-text-body_small slds-text-color_weak slds-m-left_small">Auto-detected based on applicable regulators</span>
+                                </div>
+                            </template>
+                            <template if:true={allRequiredDone}>
+                                <div class="slds-box slds-theme_success slds-m-bottom_small all-done-box">
+                                    <lightning-icon icon-name="utility:check" size="x-small" variant="inverse" class="slds-m-right_small"></lightning-icon>
+                                    All required filing documents generated. View them in the Filing Documents tab.
+                                </div>
+                            </template>
+
+                            <div class="slds-grid slds-wrap slds-gutters_x-small">
+                                <template for:each={requiredTemplates} for:item="tr">
+                                    <div key={tr.templateType} class="slds-col slds-size_1-of-2 slds-m-bottom_x-small">
+                                        <div class={tr.cardClass}>
+                                            <div class="slds-grid slds-grid_vertical-align-center slds-m-bottom_xx-small">
+                                                <lightning-icon icon-name={tr.statusIcon} size="xx-small" variant={tr.statusVariant} class="slds-m-right_xx-small"></lightning-icon>
+                                                <span class="tmpl-name">{tr.templateName}</span>
+                                            </div>
+                                            <div class="tmpl-desc">{tr.description}</div>
+                                            <div class="slds-grid slds-grid_vertical-align-center slds-m-top_xx-small">
+                                                <span class="slds-badge slds-badge_lightest slds-m-right_xx-small">{tr.regulator}</span>
+                                                <span class={tr.readinessBadgeClass}>{tr.readinessLabel}</span>
+                                                <span class="slds-text-body_small slds-text-color_weak slds-m-left_x-small">{tr.dataPointsAvailable}/{tr.dataPointsTotal} data points</span>
+                                            </div>
+                                            <div class="rd-bar-container slds-m-top_xx-small">
+                                                <div class={tr.barClass} style={tr.progressStyle}></div>
+                                            </div>
+                                            <div class="slds-m-top_x-small">
+                                                <template if:true={tr.canGenerate}>
+                                                    <lightning-button label="Generate" variant="neutral" size="small" icon-name="utility:magicwand" data-type={tr.templateType} onclick={handleGenerateSingle}></lightning-button>
+                                                </template>
+                                                <template if:false={tr.canGenerate}>
+                                                    <span class="slds-badge slds-theme_success">Generated</span>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <template if:true={hasOptional}>
+                                <h4 class="slds-text-title_caps slds-m-top_small slds-m-bottom_x-small">Optional Templates</h4>
+                                <div class="slds-grid slds-wrap slds-gutters_x-small">
+                                    <template for:each={optionalTemplates} for:item="tr">
+                                        <div key={tr.templateType} class="slds-col slds-size_1-of-2 slds-m-bottom_x-small">
+                                            <div class={tr.cardClass}>
+                                                <span class="tmpl-name">{tr.templateName}</span>
+                                                <div class="tmpl-desc">{tr.description}</div>
+                                                <div class="slds-m-top_xx-small">
+                                                    <span class="slds-badge slds-badge_lightest">{tr.regulator}</span>
+                                                    <span class="slds-badge slds-m-left_xx-small">Optional</span>
+                                                </div>
+                                                <div class="slds-m-top_x-small">
+                                                    <template if:true={tr.canGenerate}>
+                                                        <lightning-button label="Generate" variant="neutral" size="small" data-type={tr.templateType} onclick={handleGenerateSingle}></lightning-button>
+                                                    </template>
+                                                    <template if:false={tr.canGenerate}>
+                                                        <span class="slds-badge slds-theme_success">Generated</span>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+
+                    <!-- Action Buttons -->
+                    <div class="slds-grid slds-grid_align-end slds-m-top_medium">
+                        <lightning-button
+                            label="File for Review & Generate Briefs"
+                            variant="brand"
+                            icon-name="utility:forward"
+                            icon-position="right"
+                            onclick={fileForReview}>
+                        </lightning-button>
+                    </div>
+                </template>
+
+                <template if:false={hasMappings}>
+                    <div class="slds-align_absolute-center slds-p-around_large">
+                        <p class="slds-text-color_weak">No clause mappings found. Complete the Risk Assessment step first.</p>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </lightning-card>
+
+    <!-- Evidence Modal -->
+    <template if:true={showEvidenceModal}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={closeEvidenceModal}>
+                        <lightning-icon icon-name="utility:close" size="small" variant="inverse"></lightning-icon>
+                    </button>
+                    <h2 class="slds-modal__title slds-hyphenate">Add Evidence</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <div class="slds-m-bottom_small">
+                        <p><strong>{selectedClause.Clause_Reference__c}</strong></p>
+                        <p class="slds-text-body_regular slds-m-top_xx-small">{selectedClause.obligationText}</p>
+                    </div>
+                    <template if:true={selectedClause.Evidence_Hint__c}>
+                        <div class="slds-box slds-box_x-small slds-m-bottom_small hint-box">
+                            <p class="slds-text-body_small"><strong>Evidence needed:</strong> {selectedClause.Evidence_Hint__c}</p>
+                        </div>
+                    </template>
+                    <lightning-combobox
+                        label="Compliance Status"
+                        value={evidenceStatus}
+                        options={evidenceStatusOptions}
+                        onchange={handleEvidenceStatus}
+                        class="slds-m-bottom_small">
+                    </lightning-combobox>
+                    <lightning-textarea
+                        label="Evidence Description"
+                        value={evidenceText}
+                        onchange={handleEvidenceText}
+                        placeholder="Describe how this clause is met: control in place, policy reference, configuration detail..."
+                        max-length="32768">
+                    </lightning-textarea>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={closeEvidenceModal}></lightning-button>
+                    <lightning-button label="Save Evidence" variant="brand" onclick={saveEvidence} class="slds-m-left_x-small"></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

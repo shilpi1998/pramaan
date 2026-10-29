@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Manages collection follow-ups including outstanding balance checks, payment reminders, and payment plan creation</description>
+    <genAiFunctions>
+        <functionName>Check_Outstanding_Balance</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>Send_Payment_Reminder</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>Create_Payment_Plan</functionName>
+    </genAiFunctions>
+    <masterLabel>Payment Follow Up</masterLabel>
+    <scope>Handle payment collection follow-ups for overdue accounts. Check outstanding balances, send payment reminders through appropriate channels, and create restructured payment plans when needed.</scope>
+</GenAiPlugin>

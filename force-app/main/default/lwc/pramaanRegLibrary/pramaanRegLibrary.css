@@ -1,0 +1,116 @@
+:host {
+    --rbi-color: #1a237e;
+    --meity-color: #004d40;
+    --sebi-color: #b71c1c;
+    --irdai-color: #e65100;
+    --certin-color: #1b5e20;
+    --trai-color: #4a148c;
+    --uidai-color: #0d47a1;
+}
+
+.summary-card {
+    background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(26, 35, 126, 0.2);
+}
+
+.summary-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.summary-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 0.25rem;
+    opacity: 0.85;
+}
+
+.reg-card {
+    border-radius: 10px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    min-height: 140px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.reg-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.reg-card-selected {
+    border-color: #1a237e;
+    box-shadow: 0 4px 16px rgba(26, 35, 126, 0.25);
+}
+
+.reg-card-rbi { border-left: 4px solid var(--rbi-color); }
+.reg-card-meity { border-left: 4px solid var(--meity-color); }
+.reg-card-sebi { border-left: 4px solid var(--sebi-color); }
+.reg-card-irdai { border-left: 4px solid var(--irdai-color); }
+.reg-card-certin { border-left: 4px solid var(--certin-color); }
+.reg-card-trai { border-left: 4px solid var(--trai-color); }
+.reg-card-uidai { border-left: 4px solid var(--uidai-color); }
+
+.reg-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.reg-name {
+    font-weight: 700;
+    font-size: 1.1rem;
+    flex: 1;
+}
+
+.reg-clause-badge {
+    background: #e8eaf6;
+    color: #1a237e;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.reg-fullname {
+    font-size: 0.75rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.reg-focus {
+    font-size: 0.8rem;
+    color: #444;
+    line-height: 1.4;
+}
+
+.detail-panel {
+    background: #f8f9fe;
+    border: 1px solid #c5cae9;
+    border-radius: 12px;
+    padding: 1.5rem;
+    animation: slideIn 0.2s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.clause-count-large {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1a237e;
+    line-height: 1;
+}

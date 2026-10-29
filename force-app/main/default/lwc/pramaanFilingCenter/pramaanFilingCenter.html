@@ -1,0 +1,75 @@
+<template>
+    <lightning-card title="Filing Documents" icon-name="standard:document">
+        <div class="slds-p-around_medium">
+
+            <template if:false={hasPackId}>
+                <div class="slds-align_absolute-center slds-p-around_large">
+                    <div class="slds-text-align_center">
+                        <lightning-icon icon-name="utility:info" size="large" class="slds-m-bottom_small"></lightning-icon>
+                        <p class="slds-text-color_weak">Complete the Compliance Map step first to generate filing documents.</p>
+                    </div>
+                </div>
+            </template>
+
+            <template if:true={hasPackId}>
+                <div class="content-wrapper">
+                    <template if:true={isLoading}>
+                        <div class="loading-overlay">
+                            <div class="loading-box">
+                                <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template if:true={hasDocuments}>
+                        <div class="slds-grid slds-gutters_small">
+                            <!-- Document List -->
+                            <div class="slds-col slds-size_4-of-12">
+                                <h3 class="slds-text-title_caps slds-m-bottom_x-small">Generated Documents ({documents.length})</h3>
+                                <div class="doc-list">
+                                    <template for:each={documents} for:item="doc">
+                                        <div key={doc.Id} class={doc.cardClass} data-id={doc.Id} onclick={handleSelectDoc}>
+                                            <div class="doc-card-name">{doc.Template_Name__c}</div>
+                                            <div class="doc-card-meta">
+                                                <span class="slds-badge slds-badge_lightest">{doc.Status__c}</span>
+                                                <span class="slds-text-body_small slds-m-left_xx-small">{doc.generatedLabel}</span>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                            <!-- Document Viewer -->
+                            <div class="slds-col slds-size_8-of-12">
+                                <template if:true={selectedDocument}>
+                                    <div class="doc-viewer">
+                                        <div class="doc-viewer-header">
+                                            <div class="slds-grid slds-grid_vertical-align-center">
+                                                <lightning-icon icon-name="doctype:pdf" size="small" class="slds-m-right_small"></lightning-icon>
+                                                <div>
+                                                    <h4 class="slds-text-heading_small"><strong>{selectedDocument.Template_Name__c}</strong></h4>
+                                                    <span class="slds-text-body_small slds-text-color_weak">{selectedDocument.Name} | {selectedDocument.generatedLabel}</span>
+                                                </div>
+                                                <span class="slds-badge slds-theme_success slds-m-left_small">AI Generated</span>
+                                            </div>
+                                        </div>
+                                        <div class="doc-viewer-content" lwc:dom="manual"></div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:false={hasDocuments}>
+                        <div class="slds-align_absolute-center slds-p-around_large">
+                            <div class="slds-text-align_center">
+                                <lightning-icon icon-name="doctype:pdf" size="large" class="slds-m-bottom_small"></lightning-icon>
+                                <p class="slds-text-color_weak">No documents generated yet.</p>
+                                <p class="slds-text-color_weak slds-m-top_xx-small">Go to the Compliance Map tab and click "Generate All Required Documents".</p>
+                            </div>
+                        </div>
+                    </template>
+
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

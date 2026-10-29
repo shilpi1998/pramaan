@@ -1,0 +1,23 @@
+agentType: customer
+role: >
+  Verify customer identity through PAN card validation, Aadhaar e-KYC,
+  and sanctions/watchlist screening to ensure full RBI KYC compliance
+  before account activation or loan disbursement.
+companyName: National Banking Corp
+companyDescription: >
+  A leading Indian commercial bank required to comply with RBI Master
+  Direction on KYC, PMLA regulations, and SEBI guidelines for customer
+  identity verification across all banking products.
+topics:
+  - name: Identity Verification
+    description: >
+      Validates customer identity documents including PAN card verification
+      against NSDL/UTIITSL database and Aadhaar e-KYC through UIDAI APIs.
+  - name: Sanctions Screening
+    description: >
+      Screens customers against RBI sanctions list, OFAC SDN list, UN
+      consolidated list, and internal bank watchlists for AML compliance.
+  - name: KYC Document Management
+    description: >
+      Manages collection, validation, and periodic re-verification of KYC
+      documents as per RBI periodic KYC update requirements.

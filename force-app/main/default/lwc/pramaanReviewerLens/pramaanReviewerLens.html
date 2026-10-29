@@ -1,0 +1,236 @@
+<template>
+    <div class="review-gates-container">
+        <div class="review-header">
+            <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+                <div class="slds-col">
+                    <h2 class="section-title">
+                        <lightning-icon icon-name="standard:approval" size="small" class="slds-m-right_x-small"></lightning-icon>
+                        Review Gates
+                    </h2>
+                    <p class="section-subtitle">Multi-stakeholder governance review with AI-assisted Q&amp;A</p>
+                </div>
+                <template if:true={hasBriefs}>
+                    <div class="slds-col progress-col">
+                        <div class="gate-progress-container">
+                            <div class="gate-progress-bar">
+                                <div class="gate-progress-fill" style={progressStyle}></div>
+                            </div>
+                            <span class="gate-progress-label">{approvedCount} of {totalGates} gates approved</span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <template if:true={isLoading}>
+            <div class="slds-align_absolute-center slds-p-around_large">
+                <lightning-spinner alternative-text="Loading review gates..." size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+            <template if:true={hasBriefs}>
+                <div class="gates-grid">
+                    <template for:each={briefs} for:item="brief">
+                        <div class="gate-wrapper" key={brief.Id}>
+                            <div class={brief.cardClass}>
+                                <!-- Gate Header -->
+                                <div class="gate-header">
+                                    <div class="gate-lens-info">
+                                        <lightning-icon icon-name={brief.lensIcon} size="x-small" class="lens-icon"></lightning-icon>
+                                        <h3 class="gate-lens-name">{brief.Lens__c}</h3>
+                                    </div>
+                                    <lightning-badge label={brief.Approval_Status__c} class={brief.badgeClass}></lightning-badge>
+                                </div>
+
+                                <!-- Decision Section (Pending) -->
+                                <template if:true={brief.isPending}>
+                                    <div class="decision-section">
+                                        <lightning-textarea label="Reviewer Comments" data-brief-id={brief.Id} placeholder="Add your review comments..." class="slds-m-bottom_small"></lightning-textarea>
+                                        <div class="decision-buttons">
+                                            <lightning-button label="Approve" variant="success" data-brief-id={brief.Id} data-decision="Approved" onclick={handleDecision} icon-name="utility:check"></lightning-button>
+                                            <lightning-button label="Rework" variant="neutral" data-brief-id={brief.Id} data-decision="Rework" onclick={handleDecision} icon-name="utility:redo"></lightning-button>
+                                            <lightning-button label="Reject" variant="destructive" data-brief-id={brief.Id} data-decision="Rejected" onclick={handleDecision} icon-name="utility:close"></lightning-button>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <!-- Decided Section -->
+                                <template if:false={brief.isPending}>
+                                    <div class="decided-section">
+                                        <template if:true={brief.reviewerName}>
+                                            <p class="reviewer-info">Reviewed by: <strong>{brief.reviewerName}</strong></p>
+                                        </template>
+                                        <template if:true={brief.Decision_Date__c}>
+                                            <p class="decision-date">{brief.Decision_Date__c}</p>
+                                        </template>
+                                        <template if:true={brief.Reviewer_Comments__c}>
+                                            <p class="reviewer-comments">{brief.Reviewer_Comments__c}</p>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                <!-- Q&A Toggle -->
+                                <div class="qa-toggle" data-brief-id={brief.Id} onclick={handleToggleQA}>
+                                    <lightning-icon icon-name="utility:chat" size="xx-small" class="qa-icon"></lightning-icon>
+                                    <span class="qa-toggle-label">
+                                        <template if:true={brief.qaExpanded}>Hide Q&amp;A</template>
+                                        <template if:false={brief.qaExpanded}>Ask AI a Question</template>
+                                    </span>
+                                    <template if:true={brief.hasQAs}>
+                                        <span class="qa-count">{brief.qas.length}</span>
+                                    </template>
+                                    <lightning-icon icon-name={brief.qaExpanded} size="xx-small" class="qa-chevron"></lightning-icon>
+                                </div>
+
+                                <!-- Q&A Panel -->
+                                <template if:true={brief.qaExpanded}>
+                                    <div class="qa-panel">
+                                        <!-- Previous Q&As -->
+                                        <template if:true={brief.hasQAs}>
+                                            <div class="qa-history">
+                                                <template for:each={brief.qas} for:item="qa">
+                                                    <div class="qa-pair" key={qa.Id}>
+                                                        <div class="qa-question-bubble">
+                                                            <div class="qa-bubble-header">
+                                                                <span class="qa-asker">{qa.askedBy}</span>
+                                                            </div>
+                                                            <p class="qa-text">{qa.question}</p>
+                                                        </div>
+                                                        <div class="qa-answer-bubble">
+                                                            <div class="qa-bubble-header">
+                                                                <lightning-icon icon-name="utility:einstein" size="xx-small" class="ai-icon"></lightning-icon>
+                                                                <span class="qa-ai-label">Pramaan AI</span>
+                                                            </div>
+                                                            <p class="qa-text">{qa.answer}</p>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </template>
+
+                                        <!-- Ask Input -->
+                                        <div class="qa-input-row">
+                                            <lightning-input
+                                                type="text"
+                                                placeholder="Ask about this governance gate..."
+                                                data-qa-input={brief.Id}
+                                                data-brief-id={brief.Id}
+                                                onchange={handleQuestionInput}
+                                                onkeypress={handleKeyPress}
+                                                variant="label-hidden"
+                                                class="qa-input">
+                                            </lightning-input>
+                                            <lightning-button
+                                                label="Ask"
+                                                variant="brand"
+                                                icon-name="utility:send"
+                                                data-brief-id={brief.Id}
+                                                onclick={handleAskQuestion}
+                                                disabled={brief.isAsking}
+                                                class="qa-send-btn">
+                                            </lightning-button>
+                                        </div>
+                                        <template if:true={brief.isAsking}>
+                                            <div class="qa-loading">
+                                                <lightning-spinner alternative-text="Generating answer..." size="small"></lightning-spinner>
+                                                <span class="qa-loading-text">AI is analyzing...</span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <!-- Prominent Ask AI Panel -->
+            <template if:true={hasBriefs}>
+                <div class="ask-ai-panel">
+                    <div class="ask-ai-header">
+                        <div class="ask-ai-title-row">
+                            <lightning-icon icon-name="utility:einstein" size="small" class="einstein-icon"></lightning-icon>
+                            <div>
+                                <h3 class="ask-ai-title">Ask Pramaan AI</h3>
+                                <p class="ask-ai-subtitle">Ask questions about any governance gate — compliance requirements, risk factors, regulatory obligations</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ask-ai-body">
+                        <!-- Chat History -->
+                        <template if:true={hasGlobalQAs}>
+                            <div class="chat-history">
+                                <template for:each={globalQAs} for:item="qa">
+                                    <div class="chat-pair" key={qa.Id}>
+                                        <div class="chat-question">
+                                            <div class="chat-meta">
+                                                <span class="chat-sender">You</span>
+                                                <lightning-badge label={qa.lens} class="chat-lens-badge"></lightning-badge>
+                                            </div>
+                                            <p class="chat-msg">{qa.question}</p>
+                                        </div>
+                                        <div class="chat-answer">
+                                            <div class="chat-meta">
+                                                <lightning-icon icon-name="utility:einstein" size="xx-small" class="chat-ai-icon"></lightning-icon>
+                                                <span class="chat-ai-name">Pramaan AI</span>
+                                            </div>
+                                            <p class="chat-msg">{qa.answer}</p>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+
+                        <!-- Input Area -->
+                        <div class="ask-ai-input-area">
+                            <div class="ask-ai-input-row">
+                                <lightning-combobox
+                                    label="Gate"
+                                    value={selectedAskBriefId}
+                                    options={briefOptions}
+                                    onchange={handleAskBriefChange}
+                                    variant="label-hidden"
+                                    placeholder="Select gate..."
+                                    class="ask-gate-picker">
+                                </lightning-combobox>
+                                <lightning-input
+                                    type="text"
+                                    label="Question"
+                                    placeholder="Ask about compliance, risk, regulations..."
+                                    value={globalQuestion}
+                                    onchange={handleGlobalQuestionInput}
+                                    onkeypress={handleGlobalKeyPress}
+                                    variant="label-hidden"
+                                    class="ask-input-field">
+                                </lightning-input>
+                                <lightning-button
+                                    label="Ask"
+                                    variant="brand"
+                                    icon-name="utility:send"
+                                    onclick={handleGlobalAsk}
+                                    disabled={isGlobalAsking}
+                                    class="ask-send-btn">
+                                </lightning-button>
+                            </div>
+                            <template if:true={isGlobalAsking}>
+                                <div class="ask-loading">
+                                    <lightning-spinner alternative-text="Generating answer..." size="small"></lightning-spinner>
+                                    <span class="ask-loading-text">Pramaan AI is analyzing governance context...</span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <template if:false={hasBriefs}>
+                <div class="empty-state">
+                    <lightning-icon icon-name="utility:approval" size="large" class="empty-icon"></lightning-icon>
+                    <p class="empty-text">No review gates found. File for review from the Compliance Map step.</p>
+                </div>
+            </template>
+        </template>
+    </div>
+</template>

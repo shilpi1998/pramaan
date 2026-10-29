@@ -1,0 +1,167 @@
+<template>
+    <div class="audit-container">
+        <!-- Header -->
+        <div class="audit-header">
+            <div class="audit-header-left">
+                <lightning-icon icon-name="standard:record_lookup" size="medium"></lightning-icon>
+                <div class="audit-header-text">
+                    <h2 class="audit-title">Immutable Audit Trail</h2>
+                    <p class="audit-subtitle">Blockchain-anchored governance event ledger</p>
+                </div>
+            </div>
+            <div class="audit-header-actions">
+                <lightning-button label="Export" icon-name="utility:download" onclick={handleExport}></lightning-button>
+                <lightning-button label="Refresh" icon-name="utility:refresh" onclick={handleRefresh} class="slds-m-left_x-small"></lightning-button>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <template if:true={isLoading}>
+            <div class="slds-align_absolute-center slds-p-around_large">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+            <!-- Chain Integrity Banner -->
+            <template if:true={hasChainStatus}>
+                <div class={chainBadgeClass}>
+                    <div class="integrity-icon-wrap">
+                        <lightning-icon icon-name={chainBadgeIcon} size="small" variant="inverse"></lightning-icon>
+                    </div>
+                    <div class="integrity-text">
+                        <span class="integrity-label">{chainBadgeText}</span>
+                        <span class="integrity-detail">{totalEvents} events verified with SHA-256 hash chain</span>
+                    </div>
+                    <template if:true={isChainVerified}>
+                        <div class="integrity-shield">&#x1F6E1;</div>
+                    </template>
+                </div>
+            </template>
+
+            <!-- Stats Dashboard -->
+            <template if:true={hasEvents}>
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-number">{totalEvents}</div>
+                        <div class="stat-label">Total Events</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{timeSpan}</div>
+                        <div class="stat-label">Time Span</div>
+                    </div>
+                    <div class="stat-card stat-card-wide">
+                        <div class="stat-label slds-m-bottom_x-small">Events by Type</div>
+                        <template for:each={eventTypeCounts} for:item="tc">
+                            <div class="type-bar-row" key={tc.label}>
+                                <span class="type-bar-label">{tc.label}</span>
+                                <div class="type-bar-track">
+                                    <div class="type-bar-fill" style={tc.barStyle}></div>
+                                </div>
+                                <span class="type-bar-count">{tc.count}</span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Two-column: Timeline + Chain -->
+                <div class="trail-body">
+                    <!-- LEFT: Event Timeline -->
+                    <div class="timeline-col">
+                        <h3 class="section-heading">Event Timeline</h3>
+                        <div class="timeline-track">
+                            <template for:each={chainBlocks} for:item="blk">
+                                <div class="tl-item" key={blk.Id} data-id={blk.Id} onclick={handleToggleBlock}>
+                                    <!-- Connector line -->
+                                    <div class="tl-connector">
+                                        <div class="tl-dot" style={blk.dotStyle}></div>
+                                        <template if:false={blk.isLast}>
+                                            <div class="tl-line"></div>
+                                        </template>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="tl-content">
+                                        <div class="tl-header-row">
+                                            <span class="tl-badge" style={blk.badgeBg}>{blk.typeLabel}</span>
+                                            <span class="tl-seq">{blk.seqLabel}</span>
+                                            <span class="tl-time">{blk.formattedTimestamp}</span>
+                                        </div>
+                                        <div class="tl-event-type">{blk.Event_Type__c}</div>
+                                        <div class="tl-actor">
+                                            <lightning-icon icon-name="utility:user" size="xx-small"></lightning-icon>
+                                            <span>{blk.Actor__c}</span>
+                                        </div>
+                                        <!-- Expanded details -->
+                                        <template if:true={blk.isExpanded}>
+                                            <div class="tl-details">
+                                                <div class="tl-detail-row">
+                                                    <span class="tl-detail-label">Payload</span>
+                                                    <span class="tl-detail-value">{blk.Payload__c}</span>
+                                                </div>
+                                                <div class="tl-detail-row">
+                                                    <span class="tl-detail-label">Hash</span>
+                                                    <span class="tl-detail-hash">{blk.Event_Hash__c}</span>
+                                                </div>
+                                                <div class="tl-detail-row">
+                                                    <span class="tl-detail-label">Prev Hash</span>
+                                                    <span class="tl-detail-hash">{blk.Previous_Hash__c}</span>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <template if:false={blk.isExpanded}>
+                                            <div class="tl-payload-preview">{blk.Payload__c}</div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Hash Chain Blocks -->
+                    <div class="chain-col">
+                        <h3 class="section-heading">Hash Chain</h3>
+                        <div class="chain-track">
+                            <template for:each={chainBlocks} for:item="blk">
+                                <div key={blk.Id} class="chain-block-wrap">
+                                    <!-- Connector arrow -->
+                                    <template if:true={blk.showConnector}>
+                                        <div class="chain-arrow">
+                                            <div class="chain-arrow-line"></div>
+                                            <div class="chain-arrow-head">&#x25BC;</div>
+                                        </div>
+                                    </template>
+                                    <div class={blk.blockClass}>
+                                        <div class="cb-header">
+                                            <span class="cb-seq">Block {blk.seqLabel}</span>
+                                            <template if:true={isChainVerified}>
+                                                <span class="cb-check">&#x2705;</span>
+                                            </template>
+                                        </div>
+                                        <div class="cb-row">
+                                            <span class="cb-label">Hash</span>
+                                            <span class="cb-hash">{blk.hashShort}</span>
+                                        </div>
+                                        <div class="cb-row">
+                                            <span class="cb-label">Prev</span>
+                                            <span class="cb-hash cb-prev">{blk.prevHashShort}</span>
+                                        </div>
+                                        <div class="cb-type">{blk.Event_Type__c}</div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <template if:false={hasEvents}>
+                <div class="slds-align_absolute-center slds-p-around_x-large">
+                    <div class="empty-state">
+                        <lightning-icon icon-name="utility:lock" size="large"></lightning-icon>
+                        <p class="slds-m-top_medium slds-text-color_weak">No audit events recorded yet.</p>
+                    </div>
+                </div>
+            </template>
+        </template>
+    </div>
+</template>

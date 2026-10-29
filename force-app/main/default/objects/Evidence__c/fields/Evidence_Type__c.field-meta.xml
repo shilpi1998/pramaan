@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Evidence_Type__c</fullName>
+    <label>Evidence Type</label>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+                <value><fullName>Metadata</fullName><default>false</default></value>
+                <value><fullName>Policy</fullName><default>false</default></value>
+                <value><fullName>Consent</fullName><default>false</default></value>
+                <value><fullName>Test</fullName><default>false</default></value>
+                <value><fullName>Audit</fullName><default>false</default></value>
+                <value><fullName>Platform</fullName><default>false</default></value>
+        </valueSetDefinition>
+    </valueSet>
+    <required>false</required>
+</CustomField>

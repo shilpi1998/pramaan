@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pramaan — Why Indian Banks Need AI Governance Filing</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --surface-1: #1a1a19;
+    --surface-2: #242423;
+    --surface-3: #2e2e2d;
+    --text-primary: #f0efec;
+    --text-secondary: #c3c2b7;
+    --text-muted: #8a8980;
+    --border: #3a3a38;
+
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --series-4: #c98500;
+    --series-5: #d55181;
+    --series-6: #008300;
+    --series-7: #9085e9;
+    --series-8: #e66767;
+
+    --accent-purple: #9085e9;
+    --accent-blue: #3987e5;
+    --accent-green: #199e70;
+    --accent-orange: #d95926;
+    --accent-red: #e66767;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--surface-1);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .dashboard {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .dash-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dash-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.25rem;
+  }
+
+  .dash-header .tagline {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+
+  .source-note {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    font-style: italic;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .stat-card:nth-child(1)::before { background: var(--series-1); }
+  .stat-card:nth-child(2)::before { background: var(--series-2); }
+  .stat-card:nth-child(3)::before { background: var(--series-3); }
+  .stat-card:nth-child(4)::before { background: var(--series-7); }
+
+  .stat-number {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  .stat-card:nth-child(1) .stat-number { color: var(--series-1); }
+  .stat-card:nth-child(2) .stat-number { color: var(--series-2); }
+  .stat-card:nth-child(3) .stat-number { color: var(--series-3); }
+  .stat-card:nth-child(4) .stat-number { color: var(--series-7); }
+
+  .stat-label {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+  }
+
+  .stat-detail {
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+  }
+
+  .section-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .section-full { grid-column: 1 / -1; }
+
+  .card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .card h3 .icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+  }
+
+  .chart-container {
+    position: relative;
+    height: 260px;
+  }
+
+  .case-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .case-card {
+    background: var(--surface-3);
+    border-radius: 10px;
+    padding: 1.25rem;
+    border-left: 4px solid;
+    transition: transform 0.15s;
+  }
+
+  .case-card:hover { transform: translateY(-2px); }
+
+  .case-card:nth-child(1) { border-left-color: var(--series-1); }
+  .case-card:nth-child(2) { border-left-color: var(--series-2); }
+  .case-card:nth-child(3) { border-left-color: var(--series-3); }
+  .case-card:nth-child(4) { border-left-color: var(--series-7); }
+
+  .case-name {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.125rem;
+  }
+
+  .case-card:nth-child(1) .case-name { color: var(--series-1); }
+  .case-card:nth-child(2) .case-name { color: var(--series-2); }
+  .case-card:nth-child(3) .case-name { color: var(--series-3); }
+  .case-card:nth-child(4) .case-name { color: var(--series-7); }
+
+  .case-type {
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  .case-story {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  .case-highlight {
+    display: inline-block;
+    background: rgba(144, 133, 233, 0.15);
+    color: var(--accent-purple);
+    font-weight: 600;
+    padding: 0.125rem 0.375rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.8125rem;
+  }
+
+  .comparison-table th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .comparison-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+
+  .comparison-table tr:last-child td { border-bottom: none; }
+
+  .comparison-table .metric-name {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .val-before { color: var(--accent-red); font-weight: 600; }
+  .val-after { color: var(--accent-green); font-weight: 600; }
+  .val-reduction { color: var(--accent-purple); font-weight: 700; font-size: 0.875rem; }
+
+  .reg-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .reg-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.75rem;
+    background: var(--surface-3);
+    border-radius: 8px;
+    font-size: 0.8125rem;
+  }
+
+  .reg-badge {
+    min-width: 52px;
+    text-align: center;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    color: #fff;
+  }
+
+  .reg-badge.rbi { background: var(--series-1); }
+  .reg-badge.sebi { background: var(--series-2); }
+  .reg-badge.irdai { background: var(--series-3); }
+  .reg-badge.dpdp { background: var(--series-7); }
+  .reg-badge.certin { background: var(--series-5); }
+
+  .reg-text { color: var(--text-secondary); flex: 1; }
+  .reg-count { font-weight: 700; color: var(--text-primary); font-size: 0.875rem; }
+
+  .value-callout {
+    background: linear-gradient(135deg, rgba(144, 133, 233, 0.1), rgba(57, 135, 229, 0.1));
+    border: 1px solid rgba(144, 133, 233, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .value-callout .big-number {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.1;
+  }
+
+  .value-callout .big-label {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+  }
+
+  .value-callout .big-detail {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .pramaan-banner {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+    margin-top: 1rem;
+  }
+
+  .pramaan-banner h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.25rem;
+  }
+
+  .pramaan-banner p {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 768px) {
+    .stat-row { grid-template-columns: repeat(2, 1fr); }
+    .section-grid { grid-template-columns: 1fr; }
+    .case-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="dashboard">
+
+  <div class="dash-header">
+    <h1>Why Indian Banks Are Stuck</h1>
+    <p class="tagline">Real compliance stories from HDFC Bank, IDFC First Bank, Bajaj Finance &amp; Kotak — and what Pramaan fixes</p>
+    <p class="source-note">Data sourced from Salesforce internal Slack threads &amp; Vinayak Bhat's field research (Oct 2026)</p>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-number">~520</div>
+      <div class="stat-label">Fields Per Use Case</div>
+      <div class="stat-detail">Each AI agent filing needs ~520 data points filled across forms</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">14–40</div>
+      <div class="stat-label">Documents Required</div>
+      <div class="stat-detail">Regulatory documents a bank must produce per agent use case</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">~450</div>
+      <div class="stat-label">Manual Clicks</div>
+      <div class="stat-detail">Clicks across 5 governance gates just to file one agent</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">76</div>
+      <div class="stat-label">Regulatory Clauses</div>
+      <div class="stat-detail">From 28 different regulatory instruments (RBI, DPDP, IRDAI, SEBI)</div>
+    </div>
+  </div>
+
+  <div class="section-grid">
+    <div class="card section-full">
+      <h3><span class="icon" style="background:var(--accent-red);">!</span> Real Stories — What Banks Are Going Through</h3>
+      <div class="case-grid">
+
+        <div class="case-card">
+          <div class="case-name">HDFC Bank</div>
+          <div class="case-type">AI Council Evaluation</div>
+          <div class="case-story">
+            HDFC's AI Council is evaluating Agentforce. Their Model Risk Management team asked detailed architecture questions. Then an <strong>RBI audit flagged that CI/CD code was sitting outside HDFC's network</strong>. The bank now wants a Source Code Review &amp; an OSA report — but only from a <strong>CERT-In empaneled vendor</strong>. Until that's done, nothing moves.
+          </div>
+          <span class="case-highlight">Blocked on: CERT-In vendor clearance</span>
+        </div>
+
+        <div class="case-card">
+          <div class="case-name">IDFC First Bank</div>
+          <div class="case-type">RBI Audit Crisis</div>
+          <div class="case-story">
+            RBI auditors showed up and asked for integrity statement evidence. IDFC couldn't produce it fast enough. <strong>10,000 collections users were stopped</strong> while the bank scrambled. Push messaging was flagged. The compliance team needed answers <strong>within 2–3 hours</strong> — and didn't have them ready. "Non-compliance with RBI regulations could lead to penalties."
+          </div>
+          <span class="case-highlight">Impact: 10,000 users blocked, urgent 2-hour deadline</span>
+        </div>
+
+        <div class="case-card">
+          <div class="case-name">Bajaj Finance</div>
+          <div class="case-type">AI Governance Questionnaire</div>
+          <div class="case-story">
+            Bajaj Finance submitted a detailed <strong>AI Governance &amp; Security questionnaire</strong> to the Salesforce SCCT team. They want to know exactly how Agentforce handles data, where models run, who has access. It's <strong>due 5 Nov 2026</strong>. Every answer needs evidence — not just promises. New Agentforce requirement can't proceed until every question is cleared.
+          </div>
+          <span class="case-highlight">Due: 5 Nov 2026 — evidence-based answers needed</span>
+        </div>
+
+        <div class="case-card">
+          <div class="case-name">Kotak Mahindra Bank</div>
+          <div class="case-type">RBI Enforcement Precedent</div>
+          <div class="case-story">
+            RBI already took enforcement action against Kotak for technology governance gaps — <strong>the bank was barred from onboarding new digital customers</strong>. Their CTO spoke publicly about it. Now every new AI deployment gets extra scrutiny. Kotak's compliance team reviews everything through a stricter lens because they've already been burned.
+          </div>
+          <span class="case-highlight">Precedent: RBI enforcement action already taken</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="section-grid">
+    <div class="card">
+      <h3><span class="icon" style="background:var(--series-1);">T</span> Where the Time Goes (Per Agent Filing)</h3>
+      <div class="chart-container">
+        <canvas id="timeChart"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon" style="background:var(--series-2);">B</span> Compliance Blockers Found in the Field</h3>
+      <div class="chart-container">
+        <canvas id="blockerChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-grid">
+    <div class="card">
+      <h3><span class="icon" style="background:var(--accent-green);">C</span> Before vs. After Pramaan</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr><th>Metric</th><th>Before</th><th>With Pramaan</th><th>Change</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="metric-name">Fields to fill</td>
+            <td class="val-before">~520</td>
+            <td class="val-after">~15</td>
+            <td class="val-reduction">97% less</td>
+          </tr>
+          <tr>
+            <td class="metric-name">Prep time</td>
+            <td class="val-before">40–80 hours</td>
+            <td class="val-after">&lt; 1 hour</td>
+            <td class="val-reduction">98% less</td>
+          </tr>
+          <tr>
+            <td class="metric-name">Elapsed time</td>
+            <td class="val-before">8–12 weeks</td>
+            <td class="val-after">&le; 2 weeks</td>
+            <td class="val-reduction">75–83% less</td>
+          </tr>
+          <tr>
+            <td class="metric-name">Documents</td>
+            <td class="val-before">14–40 manual</td>
+            <td class="val-after">0 (auto-generated)</td>
+            <td class="val-reduction">100% auto</td>
+          </tr>
+          <tr>
+            <td class="metric-name">Audit answers</td>
+            <td class="val-before">2–3 hours scramble</td>
+            <td class="val-after">&lt; 1 minute</td>
+            <td class="val-reduction">Instant</td>
+          </tr>
+          <tr>
+            <td class="metric-name">Same info re-entered</td>
+            <td class="val-before">~180 facts, 3x over, 5 formats</td>
+            <td class="val-after">Enter once, reused everywhere</td>
+            <td class="val-reduction">1x only</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3><span class="icon" style="background:var(--series-7);">R</span> Regulations Pramaan Covers</h3>
+      <div class="reg-list">
+        <div class="reg-item">
+          <span class="reg-badge rbi">RBI</span>
+          <span class="reg-text">Master Direction on IT Governance, IT Outsourcing, Cyber Security</span>
+          <span class="reg-count">32 clauses</span>
+        </div>
+        <div class="reg-item">
+          <span class="reg-badge dpdp">DPDP</span>
+          <span class="reg-text">Digital Personal Data Protection Act 2023</span>
+          <span class="reg-count">18 clauses</span>
+        </div>
+        <div class="reg-item">
+          <span class="reg-badge irdai">IRDAI</span>
+          <span class="reg-text">Insurance AI &amp; data handling guidelines</span>
+          <span class="reg-count">12 clauses</span>
+        </div>
+        <div class="reg-item">
+          <span class="reg-badge sebi">SEBI</span>
+          <span class="reg-text">Framework on AI/ML for securities market</span>
+          <span class="reg-count">8 clauses</span>
+        </div>
+        <div class="reg-item">
+          <span class="reg-badge certin">CERT-In</span>
+          <span class="reg-text">Incident reporting &amp; vulnerability assessment</span>
+          <span class="reg-count">6 clauses</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="value-callout">
+    <div class="big-number">&#8377;7.2 Crore</div>
+    <div class="big-label">Value Realised Earlier</div>
+    <div class="big-detail">12 agents &times; 6 months sooner &times; &#8377;10 lakh/month revenue per agent = &#8377;7.2 crore realised earlier per enterprise customer. Based on Vinayak Bhat's field research with Indian BFSI customers.</div>
+  </div>
+
+  <div class="section-grid">
+    <div class="card">
+      <h3><span class="icon" style="background:var(--series-3);">G</span> Real Blockers by Bank</h3>
+      <div class="chart-container">
+        <canvas id="realBlockersChart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <h3><span class="icon" style="background:var(--series-5);">W</span> Timeline: Filing Without Pramaan</h3>
+      <div class="chart-container">
+        <canvas id="timelineChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="pramaan-banner">
+    <h2>Pramaan: Proof, Not Paperwork</h2>
+    <p>Salesforce-native AI Governance Filing for Indian Banks &bull; Hack2Future 2026</p>
+  </div>
+
+</div>
+
+<script>
+Chart.defaults.color = '#c3c2b7';
+Chart.defaults.borderColor = '#3a3a38';
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+
+const S = ['#3987e5','#d95926','#199e70','#c98500','#d55181','#008300','#9085e9','#e66767'];
+
+const tt = {
+  backgroundColor: '#2e2e2d',
+  titleColor: '#f0efec',
+  bodyColor: '#c3c2b7',
+  borderColor: '#3a3a38',
+  borderWidth: 1,
+  cornerRadius: 8,
+  padding: 10,
+  titleFont: { weight: '600' },
+};
+
+new Chart(document.getElementById('timeChart'), {
+  type: 'doughnut',
+  data: {
+    labels: [
+      'Gathering evidence & docs',
+      'Filling forms across 5 gates',
+      'Waiting for reviewer schedules',
+      'Rework after rejection',
+      'Actual technical review'
+    ],
+    datasets: [{
+      data: [30, 25, 20, 15, 10],
+      backgroundColor: [S[0], S[1], S[2], S[4], S[6]],
+      borderColor: '#1a1a19',
+      borderWidth: 2,
+      hoverOffset: 6
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '55%',
+    plugins: {
+      tooltip: { ...tt, callbacks: { label: c => ' ' + c.label + ': ' + c.parsed + '% of total time' } },
+      legend: {
+        position: 'right',
+        labels: { padding: 12, usePointStyle: true, pointStyle: 'rectRounded', font: { size: 11 } }
+      }
+    }
+  }
+});
+
+new Chart(document.getElementById('blockerChart'), {
+  type: 'bar',
+  data: {
+    labels: [
+      'Source-code escrow demand',
+      'CERT-In vendor requirement',
+      'Data residency (voice agents)',
+      'Stamp-paper security agreement',
+      'Push messaging RBI flag',
+      'CI/CD outside bank network'
+    ],
+    datasets: [{
+      data: [7, 5, 4, 3, 2, 2],
+      backgroundColor: [S[0], S[1], S[2], S[3], S[4], S[6]],
+      borderRadius: 4,
+      barThickness: 22
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        title: { display: true, text: 'Months unresolved', font: { size: 11 }, color: '#8a8980' },
+        grid: { color: '#2e2e2d' },
+        ticks: { font: { size: 11 } }
+      },
+      y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: { ...tt, callbacks: { label: c => ' ' + c.parsed.x + ' months unresolved' } }
+    }
+  }
+});
+
+new Chart(document.getElementById('realBlockersChart'), {
+  type: 'bar',
+  data: {
+    labels: ['HDFC Bank', 'IDFC First', 'Bajaj Finance', 'Kotak'],
+    datasets: [
+      { label: 'Governance gates stuck', data: [3, 4, 2, 3], backgroundColor: S[0], borderRadius: 4, barThickness: 20 },
+      { label: 'Regulators involved', data: [2, 3, 2, 2], backgroundColor: S[2], borderRadius: 4, barThickness: 20 },
+      { label: 'Months delayed', data: [4, 6, 2, 8], backgroundColor: S[4], borderRadius: 4, barThickness: 20 }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+      y: {
+        grid: { color: '#2e2e2d' },
+        ticks: { font: { size: 11 } },
+        title: { display: true, text: 'Count / Months', font: { size: 11 }, color: '#8a8980' }
+      }
+    },
+    plugins: {
+      legend: { labels: { usePointStyle: true, pointStyle: 'rectRounded', padding: 14, font: { size: 11 } } },
+      tooltip: tt
+    }
+  }
+});
+
+new Chart(document.getElementById('timelineChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Best case (simple agent)', 'Typical BFSI case', 'Complex case (voice/data)', 'Worst case (source escrow)'],
+    datasets: [{
+      label: 'Weeks to clear governance',
+      data: [12, 24, 40, 64],
+      backgroundColor: [S[2], S[0], S[3], S[7]],
+      borderRadius: 4,
+      barThickness: 28
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        title: { display: true, text: 'Weeks', font: { size: 11 }, color: '#8a8980' },
+        grid: { color: '#2e2e2d' },
+        ticks: { font: { size: 11 } }
+      },
+      y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        ...tt,
+        callbacks: {
+          label: function(c) {
+            var w = c.parsed.x;
+            return ' ' + w + ' weeks (~' + (w / 4.33).toFixed(1) + ' months)';
+          }
+        }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

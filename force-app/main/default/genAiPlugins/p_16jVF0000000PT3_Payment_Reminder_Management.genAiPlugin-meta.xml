@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>This topic is used when a customer needs payment reminders sent via SMS, email, or push notifications in accordance with the RBI Fair Practices Code.</description>
+    <developerName>p_16jVF0000000PT3_Payment_Reminder_Management</developerName>
+    <genAiFunctions>
+        <functionName>SvcCopilotTmpl__SendEmailVerificationCode</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>AgentforceGridAgent__AgentforceGridTriggerRowExec</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>EmployeeCopilot__AnswerQuestionsWithKnowledge</functionName>
+    </genAiFunctions>
+    <genAiPluginInstructions>
+        <description>If the customer requests a payment reminder, use SvcCopilotTmpl__SendEmailVerificationCode.</description>
+        <developerName>instruction_0</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>If the customer asks for SMS or push notification reminders, use AgentforceGridAgent__AgentforceGridTriggerRowExec.</description>
+        <developerName>instruction_1</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_1</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <localDeveloperName>p_16jVF0000000PT3_Payment_Reminder_Management</localDeveloperName>
+    <masterLabel>Payment Reminder Management</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>Your job is to only manage the sending of payment reminders through SMS, email, and push notifications based on the escalation matrix. You aren&apos;t able to handle disputes or update customer contact information.</scope>
+</GenAiPlugin>

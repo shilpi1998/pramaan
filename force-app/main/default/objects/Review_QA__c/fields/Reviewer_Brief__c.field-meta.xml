@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reviewer_Brief__c</fullName>
+    <label>Reviewer Brief</label>
+    <type>Lookup</type>
+    <referenceTo>Reviewer_Brief__c</referenceTo>
+    <relationshipName>ReviewQAs</relationshipName>
+    <relationshipLabel>Review QAs</relationshipLabel>
+    <required>false</required>
+</CustomField>

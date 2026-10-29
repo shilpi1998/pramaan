@@ -1,0 +1,170 @@
+<template>
+    <div class="ll-container">
+        <div class="ll-header">
+            <div class="ll-header-left">
+                <lightning-icon icon-name="standard:loop" size="medium" class="slds-m-right_small"></lightning-icon>
+                <div>
+                    <h2 class="ll-title">Learning Loop</h2>
+                    <p class="ll-subtitle">Continuous Regulatory Intelligence &amp; Adaptive Compliance</p>
+                </div>
+            </div>
+            <div class="ll-header-right">
+                <lightning-button
+                    variant="brand"
+                    label={scanButtonLabel}
+                    icon-name="utility:refresh"
+                    onclick={handleManualScan}
+                    disabled={isScanning}
+                    class="slds-m-left_small">
+                </lightning-button>
+            </div>
+        </div>
+
+        <template if:true={isScanning}>
+            <div class="ll-scan-overlay">
+                <lightning-spinner alternative-text="Scanning" size="medium"></lightning-spinner>
+                <p class="ll-scan-text">Scanning regulatory sources &amp; analyzing rejection patterns...</p>
+            </div>
+        </template>
+
+        <template if:true={hasScanResult}>
+            <div class="ll-scan-result">
+                <lightning-icon icon-name="utility:success" variant="success" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                <span>{scanSummary}</span>
+            </div>
+        </template>
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+
+        <template if:false={isLoading}>
+            <!-- Stats Row -->
+            <div class="ll-stats-row">
+                <div class="ll-stat-card">
+                    <div class="ll-stat-icon">
+                        <lightning-icon icon-name="utility:clock" size="small"></lightning-icon>
+                    </div>
+                    <div class="ll-stat-value">{lastScanDate}</div>
+                    <div class="ll-stat-label">Last Scan</div>
+                </div>
+                <div class="ll-stat-card">
+                    <div class="ll-stat-icon ll-stat-icon-blue">
+                        <lightning-icon icon-name="utility:database" size="small"></lightning-icon>
+                    </div>
+                    <div class="ll-stat-value">{totalRegulations}</div>
+                    <div class="ll-stat-label">Regulations Tracked</div>
+                </div>
+                <div class="ll-stat-card">
+                    <div class="ll-stat-icon ll-stat-icon-green">
+                        <lightning-icon icon-name="utility:new" size="small"></lightning-icon>
+                    </div>
+                    <div class="ll-stat-value">{newThisMonth}</div>
+                    <div class="ll-stat-label">New This Month</div>
+                </div>
+                <div class="ll-stat-card">
+                    <div class="ll-score-circle" style={scoreCircleStyle}>
+                        <div class="ll-score-inner">{adaptationScore}</div>
+                    </div>
+                    <div class="ll-stat-label">Adaptation Score</div>
+                </div>
+            </div>
+
+            <!-- Two Column: Regulations + Learnings -->
+            <div class="ll-two-col">
+                <div class="ll-col">
+                    <div class="ll-section-header">
+                        <lightning-icon icon-name="utility:world" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                        <h3>Regulation Feed</h3>
+                    </div>
+                    <template if:true={hasRegulations}>
+                        <div class="ll-feed">
+                            <template for:each={regulationUpdates} for:item="reg">
+                                <div key={reg.key} class="ll-feed-item">
+                                    <div class="ll-feed-dot"></div>
+                                    <div class="ll-feed-content">
+                                        <div class="ll-feed-top">
+                                            <span class="ll-reg-badge">{reg.regulator}</span>
+                                            <span class={reg.typeBadgeClass}>{reg.updateType}</span>
+                                            <span class={reg.impactClass}>{reg.impact}</span>
+                                        </div>
+                                        <div class="ll-feed-title">{reg.regulation}</div>
+                                        <div class="ll-feed-desc">{reg.description}</div>
+                                        <div class="ll-feed-footer">
+                                            <span class="ll-feed-date">{reg.date}</span>
+                                            <span class="ll-inclusion-status">
+                                                <lightning-icon icon-name={reg.inclusionIcon} variant={reg.inclusionVariant} size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                                                {reg.inclusionLabel}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="ll-col">
+                    <div class="ll-section-header">
+                        <lightning-icon icon-name="utility:knowledge_base" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                        <h3>Rejection Learnings</h3>
+                    </div>
+                    <template if:true={hasLearnings}>
+                        <div class="ll-learnings">
+                            <template for:each={rejectionLearnings} for:item="learn">
+                                <div key={learn.key} class="ll-learning-card">
+                                    <div class="ll-learning-header">
+                                        <span class="ll-lens-badge">{learn.lens}</span>
+                                        <span class={learn.statusClass}>
+                                            <lightning-icon icon-name={learn.statusIcon} size="xx-small" class="slds-m-right_xx-small"></lightning-icon>
+                                            {learn.status}
+                                        </span>
+                                    </div>
+                                    <div class="ll-learning-reason">
+                                        <strong>Rejection:</strong> {learn.rejectionReason}
+                                    </div>
+                                    <div class="ll-learning-applied">
+                                        <strong>Learning:</strong> {learn.learningApplied}
+                                    </div>
+                                    <div class="ll-learning-date">{learn.dateApplied}</div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Template Evolution -->
+            <div class="ll-evolution-section">
+                <div class="ll-section-header">
+                    <lightning-icon icon-name="utility:merge" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                    <h3>Template Evolution</h3>
+                    <span class="ll-section-subtitle">Auto-updated based on regulatory changes and reviewer feedback</span>
+                </div>
+                <template if:true={hasEvolutions}>
+                    <div class="ll-evolution-grid">
+                        <template for:each={templateEvolutions} for:item="evo">
+                            <div key={evo.key} class="ll-evo-card">
+                                <div class="ll-evo-header">
+                                    <span class="ll-evo-name">{evo.templateName}</span>
+                                    <span class="ll-evo-version">{evo.versionChange}</span>
+                                </div>
+                                <div class="ll-evo-changes">{evo.changes}</div>
+                                <div class="ll-evo-footer">
+                                    <span class="ll-evo-date">{evo.date}</span>
+                                    <span class="ll-evo-count">{evo.changeLabel}</span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Cron Schedule Info -->
+            <div class="ll-cron-info">
+                <lightning-icon icon-name="utility:date_time" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                <span>Automated scan runs every <strong>Sunday 02:00 IST</strong> &mdash; next scan in 5 days. Covers RBI, MeitY, SEBI, CERT-In, IRDAI regulatory portals.</span>
+            </div>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>This topic is selected when customers require a detailed assessment of their credit risk, including EMI affordability calculations and credit bureau analysis. It focuses on evaluating financial viability for loan repayment.</description>
+    <developerName>p_16jVF0000000PPp_Credit_Assessment</developerName>
+    <genAiFunctions>
+        <functionName>DataCloudAgent__CdpGetMlStatisticalAnalysis</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>DataCloudAgent__CdpGetMlModelMetrics</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>EmployeeCopilot__AnswerQuestionsWithKnowledge</functionName>
+    </genAiFunctions>
+    <genAiPluginInstructions>
+        <description>If the query is about assessing EMI affordability, use DataCloudAgent__CdpGetMlStatisticalAnalysis.</description>
+        <developerName>instruction_0</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>If the customer requests a credit bureau analysis, use DataCloudAgent__CdpGetMlModelMetrics.</description>
+        <developerName>instruction_1</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_1</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Once the analysis is complete, provide a detailed summary of the credit risk assessment.</description>
+        <developerName>instruction_2</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_2</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <localDeveloperName>p_16jVF0000000PPp_Credit_Assessment</localDeveloperName>
+    <masterLabel>Credit Assessment</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>Your job is to only perform in-depth credit risk assessments by calculating EMI affordability and analyzing credit bureau data. You are not authorized to collect documents or provide final loan approvals.</scope>
+</GenAiPlugin>

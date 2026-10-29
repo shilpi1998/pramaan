@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Function__c</fullName>
+    <label>Function</label>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+                <value><fullName>Origination</fullName><default>false</default></value>
+                <value><fullName>Collections</fullName><default>false</default></value>
+                <value><fullName>Deposits</fullName><default>false</default></value>
+                <value><fullName>Payments</fullName><default>false</default></value>
+                <value><fullName>Complaints</fullName><default>false</default></value>
+                <value><fullName>KYC</fullName><default>false</default></value>
+                <value><fullName>Wealth</fullName><default>false</default></value>
+                <value><fullName>Insurance Sales</fullName><default>false</default></value>
+                <value><fullName>Insurance Claims</fullName><default>false</default></value>
+                <value><fullName>Internal Ops</fullName><default>false</default></value>
+        </valueSetDefinition>
+    </valueSet>
+    <required>false</required>
+</CustomField>

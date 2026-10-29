@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Evaluates loan eligibility by checking credit score, income verification, and product matching for pre-qualification decisions</description>
+    <genAiFunctions>
+        <functionName>Check_Credit_Score</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>Verify_Income</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>Fetch_Loan_Products</functionName>
+    </genAiFunctions>
+    <masterLabel>Loan Eligibility Check</masterLabel>
+    <scope>Determine if a customer qualifies for a loan based on their credit history, income, and eligibility criteria. Use the available actions to check credit score, verify income, and match suitable loan products.</scope>
+</GenAiPlugin>

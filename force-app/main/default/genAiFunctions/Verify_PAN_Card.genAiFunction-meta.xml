@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Validates PAN number against NSDL registry and checks for sanctions</description>
+    <invocationTarget>VerifyPANAction</invocationTarget>
+    <invocationTargetType>Apex</invocationTargetType>
+    <masterLabel>Verify PAN Card</masterLabel>
+</GenAiFunction>

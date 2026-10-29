@@ -1,0 +1,27 @@
+.passport-container {
+    max-width: 700px;
+    margin: 0 auto;
+    border: 3px solid #2e844a;
+    border-radius: 12px;
+    overflow: hidden;
+}
+.passport-header {
+    background: linear-gradient(135deg, #032d60, #1b5297);
+    color: white;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+.passport-body { padding: 1.5rem; }
+.passport-number {
+    text-align: center;
+    padding: 1rem;
+    background: #f4f6f9;
+    border-radius: 8px;
+}
+.passport-label { display: block; font-size: 0.8rem; color: #666; text-transform: uppercase; }
+.passport-value { display: block; font-size: 2rem; font-weight: bold; color: #032d60; letter-spacing: 2px; }
+.passport-hash { background: #f4f6f9; padding: 0.75rem; border-radius: 6px; word-break: break-all; }
+.passport-footer { padding: 0 1.5rem 1.5rem; }
+.chain-verified { display: flex; align-items: center; color: #2e844a; padding: 0.5rem; background: #e6f7e6; border-radius: 6px; }
+.chain-broken { display: flex; align-items: center; color: #c23934; padding: 0.5rem; background: #fde8e8; border-radius: 6px; }

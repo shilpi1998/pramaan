@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>This topic is selected when a customer requests details about their overdue loan balance, including principal, interest, penalties, and total amount due.</description>
+    <developerName>p_16jVF0000000PT3_Outstanding_Balance_Check</developerName>
+    <genAiFunctions>
+        <functionName>AgentforceGridAgent__AgentforceGridGetGenericData</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>AgentforceGridAgent__AgentforceGridGetColumnData</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>EmployeeCopilot__AnswerQuestionsWithKnowledge</functionName>
+    </genAiFunctions>
+    <genAiPluginInstructions>
+        <description>If the customer requests their outstanding balance details, use AgentforceGridAgent__AgentforceGridGetGenericData.</description>
+        <developerName>instruction_0</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>If the query includes specific components like penalties or interest, use AgentforceGridAgent__AgentforceGridGetColumnData.</description>
+        <developerName>instruction_1</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_1</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <localDeveloperName>p_16jVF0000000PT3_Outstanding_Balance_Check</localDeveloperName>
+    <masterLabel>Outstanding Balance Check</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>Your job is to only retrieve and present detailed outstanding balance information for customer accounts, including principal, interest, penalties, and total overdue amounts. You aren&apos;t able to make changes to the account or resolve disputes.</scope>
+</GenAiPlugin>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>This topic is selected when a customer requests assistance with managing KYC documents, such as their collection, validation, or periodic re-verification as per RBI guidelines.</description>
+    <developerName>p_16jVF0000000PRR_KYC_Document_Management</developerName>
+    <genAiFunctions>
+        <functionName>EmployeeCopilot__AnswerQuestionsWithKnowledge</functionName>
+    </genAiFunctions>
+    <genAiPluginInstructions>
+        <description>If the query is about periodic KYC updates, ensure compliance with RBI guidelines.</description>
+        <developerName>instruction_0</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>If a customer requests assistance with submitting KYC documents, guide them on the process.</description>
+        <developerName>instruction_1</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_1</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <localDeveloperName>p_16jVF0000000PRR_KYC_Document_Management</localDeveloperName>
+    <masterLabel>KYC Document Management</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>Your job is to only manage tasks related to KYC documents, including their collection, validation, and periodic re-verification based on RBI requirements. You cannot perform identity verification or sanctions screening.</scope>
+</GenAiPlugin>

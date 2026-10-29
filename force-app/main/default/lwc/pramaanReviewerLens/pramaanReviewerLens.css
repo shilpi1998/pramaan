@@ -1,0 +1,475 @@
+.review-gates-container {
+    padding: 1rem;
+}
+
+.review-header {
+    margin-bottom: 1.5rem;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #032d60;
+    display: flex;
+    align-items: center;
+}
+
+.section-subtitle {
+    font-size: 0.8125rem;
+    color: #706e6b;
+    margin-top: 0.25rem;
+}
+
+.gate-progress-container {
+    text-align: right;
+}
+
+.gate-progress-bar {
+    height: 8px;
+    background: #e5e5e5;
+    border-radius: 4px;
+    overflow: hidden;
+    width: 200px;
+    margin-left: auto;
+    margin-bottom: 4px;
+}
+
+.gate-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2e844a, #45c65a);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.gate-progress-label {
+    font-size: 0.75rem;
+    color: #706e6b;
+}
+
+.gates-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+@media (max-width: 768px) {
+    .gates-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.gate-card {
+    border-radius: 10px;
+    padding: 1.25rem;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    transition: box-shadow 0.2s ease;
+}
+
+.gate-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.gate-pending {
+    border-left: 4px solid #ff9a3c;
+}
+
+.gate-approved {
+    border-left: 4px solid #2e844a;
+    background: #f4faf5;
+}
+
+.gate-rejected {
+    border-left: 4px solid #c23934;
+    background: #fef0f0;
+}
+
+.gate-rework {
+    border-left: 4px solid #ff9a3c;
+    background: #fffaf0;
+}
+
+.gate-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.gate-lens-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.gate-lens-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #032d60;
+}
+
+.decision-section {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e5e5e5;
+}
+
+.decision-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.decided-section {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e5e5e5;
+}
+
+.reviewer-info {
+    font-size: 0.8125rem;
+    color: #3e3e3c;
+}
+
+.decision-date {
+    font-size: 0.75rem;
+    color: #706e6b;
+}
+
+.reviewer-comments {
+    font-size: 0.8125rem;
+    color: #3e3e3c;
+    font-style: italic;
+    margin-top: 0.25rem;
+}
+
+/* Q&A Toggle */
+.qa-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed #d8d8d8;
+    cursor: pointer;
+    color: #0070d2;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    transition: color 0.15s;
+}
+
+.qa-toggle:hover {
+    color: #005fb2;
+}
+
+.qa-toggle-label {
+    flex: 1;
+}
+
+.qa-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #0070d2;
+    color: #fff;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+}
+
+/* Q&A Panel */
+.qa-panel {
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    background: #f7f9fb;
+    border-radius: 8px;
+    border: 1px solid #e5e5e5;
+}
+
+.qa-history {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 0.75rem;
+}
+
+.qa-pair {
+    margin-bottom: 0.75rem;
+}
+
+.qa-pair:last-child {
+    margin-bottom: 0;
+}
+
+/* Question bubble — right aligned */
+.qa-question-bubble {
+    margin-left: 20%;
+    background: #0070d2;
+    color: #fff;
+    border-radius: 12px 12px 2px 12px;
+    padding: 0.625rem 0.875rem;
+    margin-bottom: 0.375rem;
+}
+
+.qa-question-bubble .qa-bubble-header {
+    margin-bottom: 0.25rem;
+}
+
+.qa-question-bubble .qa-asker {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    opacity: 0.85;
+}
+
+.qa-question-bubble .qa-text {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Answer bubble — left aligned */
+.qa-answer-bubble {
+    margin-right: 10%;
+    background: #fff;
+    color: #3e3e3c;
+    border-radius: 12px 12px 12px 2px;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.qa-answer-bubble .qa-bubble-header {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.qa-ai-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #7c41db;
+}
+
+.qa-answer-bubble .qa-text {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Input Row */
+.qa-input-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-end;
+}
+
+.qa-input {
+    flex: 1;
+}
+
+.qa-send-btn {
+    flex-shrink: 0;
+}
+
+.qa-loading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+}
+
+.qa-loading-text {
+    font-size: 0.75rem;
+    color: #706e6b;
+    font-style: italic;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+}
+
+.empty-icon {
+    margin-bottom: 1rem;
+}
+
+.empty-text {
+    color: #706e6b;
+    font-size: 0.9375rem;
+}
+
+/* Ask Pramaan AI Panel */
+.ask-ai-panel {
+    margin-top: 1.5rem;
+    background: linear-gradient(135deg, #f8f6ff 0%, #f0f7ff 100%);
+    border: 2px solid #7c41db;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(124, 65, 219, 0.12);
+}
+
+.ask-ai-header {
+    background: linear-gradient(135deg, #7c41db 0%, #0070d2 100%);
+    padding: 1rem 1.25rem;
+}
+
+.ask-ai-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.einstein-icon {
+    --sds-c-icon-color-foreground-default: #fff;
+    flex-shrink: 0;
+}
+
+.ask-ai-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.ask-ai-subtitle {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0.125rem 0 0 0;
+}
+
+.ask-ai-body {
+    padding: 1rem 1.25rem;
+}
+
+.chat-history {
+    max-height: 350px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.chat-pair {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.chat-question {
+    margin-left: 25%;
+    background: #0070d2;
+    color: #fff;
+    border-radius: 12px 12px 2px 12px;
+    padding: 0.75rem 1rem;
+}
+
+.chat-answer {
+    margin-right: 15%;
+    background: #fff;
+    color: #3e3e3c;
+    border-radius: 12px 12px 12px 2px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.chat-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin-bottom: 0.25rem;
+}
+
+.chat-sender {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    opacity: 0.85;
+}
+
+.chat-lens-badge {
+    --sds-c-badge-color-background: rgba(255, 255, 255, 0.2);
+    --sds-c-badge-text-color: #fff;
+    font-size: 0.625rem;
+}
+
+.chat-ai-icon {
+    --sds-c-icon-color-foreground-default: #7c41db;
+}
+
+.chat-ai-name {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #7c41db;
+}
+
+.chat-msg {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.ask-ai-input-area {
+    border-top: 1px solid #e0d8f0;
+    padding-top: 0.75rem;
+}
+
+.ask-ai-input-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-end;
+}
+
+.ask-gate-picker {
+    width: 180px;
+    flex-shrink: 0;
+}
+
+.ask-input-field {
+    flex: 1;
+}
+
+.ask-send-btn {
+    flex-shrink: 0;
+}
+
+.ask-loading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+}
+
+.ask-loading-text {
+    font-size: 0.75rem;
+    color: #7c41db;
+    font-style: italic;
+}
+
+/* Badge overrides */
+.badge-pending {
+    --sds-c-badge-color-background: #ff9a3c;
+    --sds-c-badge-text-color: #fff;
+}
+
+.badge-approved {
+    --sds-c-badge-color-background: #2e844a;
+    --sds-c-badge-text-color: #fff;
+}
+
+.badge-rejected {
+    --sds-c-badge-color-background: #c23934;
+    --sds-c-badge-text-color: #fff;
+}
+
+.badge-rework {
+    --sds-c-badge-color-background: #fe9339;
+    --sds-c-badge-text-color: #fff;
+}

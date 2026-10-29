@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Verifies customer identity through PAN, Aadhaar e-KYC, and sanctions screening for RBI KYC compliance</description>
+    <genAiFunctions>
+        <functionName>Verify_PAN_Card</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>Verify_Aadhaar</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>Check_Watchlist</functionName>
+    </genAiFunctions>
+    <masterLabel>Identity Verification</masterLabel>
+    <scope>Verify customer identity for KYC compliance. Validate PAN card, perform Aadhaar e-KYC verification, and screen against sanctions and watchlists. Ensure all identity checks pass before account activation.</scope>
+</GenAiPlugin>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Validates Aadhaar number via UIDAI e-KYC with consent and masking applied</description>
+    <invocationTarget>VerifyAadhaarAction</invocationTarget>
+    <invocationTargetType>Apex</invocationTargetType>
+    <masterLabel>Verify Aadhaar</masterLabel>
+</GenAiFunction>
