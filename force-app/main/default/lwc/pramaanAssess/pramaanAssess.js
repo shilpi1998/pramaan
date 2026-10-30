@@ -15,8 +15,17 @@ export default class PramaanAssess extends LightningElement {
     @track assessmentComplete = false;
     @track riskResult;
     @track llmAnalysis;
-    @track dna = {};
-    @track agentDescription = 'This AI agent automates KYC (Know Your Customer) verification for bank customers. It validates identity documents, performs PEP/sanctions screening, checks against RBI watchlists, and generates compliance reports. The agent processes customer onboarding applications and flags high-risk profiles for manual review.';
+    @track dna = {
+        subSector: 'SCB',
+        decisionImpact: 'Decisioning',
+        autonomy: 'Human-on-loop',
+        audience: 'Customer',
+        func: 'KYC',
+        dataCategories: 'PII, Financial, Aadhaar',
+        channels: 'Web, Mobile, WhatsApp',
+        vulnerable: true
+    };
+    @track agentDescription = 'Automates KYC verification for bank customers — validates identity documents (Aadhaar, PAN), screens against PEP/sanctions/RBI watchlists, and flags high-risk profiles for manual review.';
     subSectorOptions = [
         { label: 'Scheduled Commercial Bank (SCB)', value: 'SCB' },
         { label: 'Small Finance Bank (SFB)', value: 'SFB' },
@@ -73,13 +82,13 @@ export default class PramaanAssess extends LightningElement {
             const uc = result.useCase;
             this.dna = {
                 subSector: uc.Sub_Sector__c || 'SCB',
-                decisionImpact: uc.Decision_Impact__c || 'Advisory',
+                decisionImpact: uc.Decision_Impact__c || 'Decisioning',
                 autonomy: uc.Autonomy__c || 'Human-on-loop',
                 audience: uc.Audience__c || 'Customer',
-                func: uc.Function__c || 'Origination',
-                dataCategories: uc.Data_Categories__c || 'PII, Financial',
-                channels: uc.Channels__c || 'Web, Mobile',
-                vulnerable: uc.Vulnerable_Customers__c || false
+                func: uc.Function__c || 'KYC',
+                dataCategories: uc.Data_Categories__c || 'PII, Financial, Aadhaar',
+                channels: uc.Channels__c || 'Web, Mobile, WhatsApp',
+                vulnerable: uc.Vulnerable_Customers__c !== undefined ? uc.Vulnerable_Customers__c : true
             };
         } catch (e) {
             console.error('Load use case error:', e);
