@@ -431,7 +431,7 @@ public with sharing class PramaanGovernanceService {
         }
 
         if (templateType == 'AI_RISK_COMMITTEE') {
-            return buildAIRiskCommitteeDoc(agent, tier, fn, aud, auto, impact, dataCats, pName, d, totalC, gapC, metC, compRate, byReg, gaps, uc);
+            return buildAIRiskCommitteeDoc(agent, tier, fn, aud, auto, impact, dataCats, pName, d, totalC, gapC, metC, compRate, byReg, gaps, uc, clauses);
         } else if (templateType == 'MODEL_RISK') {
             return buildModelRiskDoc(agent, tier, fn, aud, auto, impact, dataCats, pName, d, totalC, gapC, metC, compRate, byReg, gaps, uc);
         } else if (templateType == 'BOARD_NOTE') {
@@ -440,12 +440,14 @@ public with sharing class PramaanGovernanceService {
             return buildCybersecurityDoc(agent, tier, fn, aud, auto, impact, dataCats, pName, d, totalC, gapC, metC, compRate, byReg, gaps, uc);
         } else if (templateType == 'REG_COMPLIANCE_CERT') {
             return buildRegComplianceCertDoc(agent, tier, fn, aud, auto, impact, dataCats, pName, d, totalC, gapC, metC, compRate, byReg, gaps, uc, clauses);
+        } else if (templateType == 'DPIA') {
+            return buildDPIADoc(agent, tier, fn, aud, auto, impact, dataCats, pName, d, totalC, gapC, metC, compRate, byReg, gaps, uc, clauses);
         } else {
             return buildDeterministicFilingDoc(uc, pack, clauses);
         }
     }
 
-    private static String buildAIRiskCommitteeDoc(String agent, String tier, String fn, String aud, String auto, String impact, String dataCats, String pName, String d, Integer totalC, Integer gapC, Integer metC, Integer compRate, Map<String, List<Clause_Mapping__c>> byReg, List<Clause_Mapping__c> gaps, AI_Use_Case__c uc) {
+    private static String buildAIRiskCommitteeDoc(String agent, String tier, String fn, String aud, String auto, String impact, String dataCats, String pName, String d, Integer totalC, Integer gapC, Integer metC, Integer compRate, Map<String, List<Clause_Mapping__c>> byReg, List<Clause_Mapping__c> gaps, AI_Use_Case__c uc, List<Clause_Mapping__c> clauses) {
         String h = docHead('CONFIDENTIAL &mdash; AI RISK COMMITTEE', 'AI Governance & Compliance Division', 'AI Risk Committee &mdash; Use Case Approval Filing');
         h += '<table class="rpt-meta">' +
             metaRow('Filing Reference', 'PRAMAAN/AIRC/2026/001') +
@@ -512,7 +514,9 @@ public with sharing class PramaanGovernanceService {
             h += '</table>';
         }
 
-        h += '<h2>6. Proposed Mitigations &amp; Controls</h2>' +
+        h += buildEvidenceSection(clauses, '6. Evidence Captured');
+
+        h += '<h2>7. Proposed Mitigations &amp; Controls</h2>' +
             '<table class="rpt-tbl"><tr><th>Control</th><th>Description</th><th>Status</th></tr>' +
             '<tr><td>Human-in-the-Loop</td><td>Manual override available for all critical agent decisions</td><td>' + statusTag('Met') + '</td></tr>' +
             '<tr><td>Salesforce Trust Layer</td><td>Input sanitization, grounding, toxicity detection, PII masking</td><td>' + statusTag('Met') + '</td></tr>' +
@@ -521,12 +525,12 @@ public with sharing class PramaanGovernanceService {
             '<tr><td>Drift Detection</td><td>Automated monthly model revalidation and output monitoring</td><td>' + statusTag('Met') + '</td></tr>' +
             '<tr><td>Audit Trail</td><td>Immutable hash-chain audit log of all governance actions</td><td>' + statusTag('Met') + '</td></tr></table>';
 
-        h += '<h2>7. Risk-Benefit Assessment</h2>' +
+        h += '<h2>8. Risk-Benefit Assessment</h2>' +
             '<div class="rpt-callout"><strong>Recommendation:</strong> The residual risk profile, after application of all mitigating controls, ' +
             'is assessed as <strong>ACCEPTABLE</strong> for ' + esc(tier) + ' tier deployment. The expected operational benefits &mdash; including improved ' + esc(fn) +
             ' efficiency, reduced manual processing time, and enhanced regulatory auditability &mdash; justify the controlled deployment under the conditions specified below.</div>';
 
-        h += '<h2>8. Conditions for Approval</h2><ol>' +
+        h += '<h2>9. Conditions for Approval</h2><ol>' +
             '<li>All ' + gapC + ' identified compliance gaps to be remediated within <strong>30 calendar days</strong></li>' +
             '<li>Post-deployment monitoring review to be conducted at <strong>Day 30, Day 60, and Day 90</strong></li>' +
             '<li>Quarterly compliance attestation submitted to AI Risk Committee</li>' +
@@ -873,6 +877,167 @@ public with sharing class PramaanGovernanceService {
             '<tr><td class="rpt-sl"><strong>Role</strong></td><td><strong>Signature</strong></td><td><strong>Date</strong></td></tr>' +
             signRow('Chief Compliance Officer') + signRow('Head, AI Governance') +
             signRow('External Auditor') + '</table></div>';
+        h += docFooter();
+        return h;
+    }
+
+    private static String buildEvidenceSection(List<Clause_Mapping__c> clauses, String title) {
+        String h = '<h2>' + esc(title) + '</h2>' +
+            '<p>The following evidence has been captured and linked to specific regulatory obligations. Each evidence item is traced back to its source clause and represents verifiable proof of compliance.</p>';
+        List<Clause_Mapping__c> withEvidence = new List<Clause_Mapping__c>();
+        List<Clause_Mapping__c> withoutEvidence = new List<Clause_Mapping__c>();
+        for (Clause_Mapping__c cm : clauses) {
+            if (cm.Evidence__c != null && cm.Evidence__c.length() > 0) {
+                withEvidence.add(cm);
+            } else {
+                withoutEvidence.add(cm);
+            }
+        }
+        Integer captured = withEvidence.size();
+        Integer total = clauses.size();
+        Integer pct = total > 0 ? (Integer) Math.round((Decimal.valueOf(captured) / total) * 100) : 0;
+        String coverageClass = pct >= 80 ? 'rpt-tag-green' : (pct >= 50 ? 'rpt-tag-amber' : 'rpt-tag-red');
+        h += '<div class="rpt-callout"><strong>Evidence Coverage:</strong> <span class="rpt-tag ' + coverageClass + '">' + pct + '% captured</span> &mdash; ' +
+            captured + ' of ' + total + ' applicable clauses have linked evidence artifacts.</div>';
+        if (!withEvidence.isEmpty()) {
+            h += '<table class="rpt-tbl"><tr><th style="width:25%">Clause</th><th style="width:15%">Regulator</th><th style="width:12%">Status</th><th>Evidence Captured</th></tr>';
+            for (Clause_Mapping__c cm : withEvidence) {
+                String ev = cm.Evidence__c.length() > 200 ? cm.Evidence__c.substring(0, 200) + '...' : cm.Evidence__c;
+                h += '<tr><td><strong>' + esc(cm.Clause_Reference__c) + '</strong></td>' +
+                    '<td>' + esc(cm.Regulator__c) + '</td>' +
+                    '<td>' + statusTag(cm.Mapping_Status__c) + '</td>' +
+                    '<td>' + esc(ev) + '</td></tr>';
+            }
+            h += '</table>';
+        }
+        if (!withoutEvidence.isEmpty()) {
+            h += '<h3>Evidence Pending</h3>' +
+                '<table class="rpt-tbl"><tr><th>Clause</th><th>Regulator</th><th>Status</th><th>Evidence Hint</th></tr>';
+            Integer idx = 0;
+            for (Clause_Mapping__c cm : withoutEvidence) {
+                if (idx >= 10) { h += '<tr><td colspan="4"><em>... and ' + (withoutEvidence.size() - 10) + ' more clauses awaiting evidence</em></td></tr>'; break; }
+                String hintText = cm.Evidence_Hint__c != null ? cm.Evidence_Hint__c : 'Not specified';
+                h += '<tr><td>' + esc(cm.Clause_Reference__c) + '</td>' +
+                    '<td>' + esc(cm.Regulator__c) + '</td>' +
+                    '<td>' + statusTag(cm.Mapping_Status__c) + '</td>' +
+                    '<td><em>' + esc(hintText) + '</em></td></tr>';
+                idx++;
+            }
+            h += '</table>';
+        }
+        return h;
+    }
+
+    private static String buildDPIADoc(String agent, String tier, String fn, String aud, String auto, String impact, String dataCats, String pName, String d, Integer totalC, Integer gapC, Integer metC, Integer compRate, Map<String, List<Clause_Mapping__c>> byReg, List<Clause_Mapping__c> gaps, AI_Use_Case__c uc, List<Clause_Mapping__c> clauses) {
+        String h = docHead('CONFIDENTIAL &mdash; DATA PROTECTION', 'Data Privacy & Protection Office', 'Data Protection Impact Assessment (DPIA)');
+        h += '<table class="rpt-meta">' +
+            metaRow('DPIA Reference', 'PRAMAAN/DPIA/2026/001') +
+            metaRow('Assessment Date', d) +
+            metaRow('Data Fiduciary', 'Sample Bank Limited') +
+            metaRow('DPO Contact', 'dpo@samplebank.in') +
+            metaRow('Regulatory Basis', 'DPDP Act 2023 §10; DPDP Rules 2025 (G.S.R. 846(E))') +
+            metaRow('Version', '1.0') + '</table>';
+
+        h += '<h2>1. Executive Summary</h2>' +
+            '<p>This Data Protection Impact Assessment evaluates the personal data processing activities of the <strong>' + esc(agent) +
+            '</strong> AI agent, deployed on Salesforce Agentforce platform for <strong>' + esc(fn) + '</strong> operations. ' +
+            'The agent processes <strong>' + esc(dataCats) + '</strong> data categories for <strong>' + esc(aud) + '</strong> users ' +
+            'with <strong>' + esc(auto) + '</strong> autonomy. Risk tier: <span class="' + riskClass(tier) + '">' + esc(tier) + '</span>.</p>' +
+            '<div class="rpt-callout">This DPIA is mandatory under DPDP Act 2023 §10 as the processing involves automated decision-making ' +
+            'that significantly affects data principals. A total of <strong>' + totalC + '</strong> regulatory clauses evaluated with <strong>' +
+            compRate + '% compliance</strong> achieved.</div>';
+
+        h += '<h2>2. Processing Activity Description</h2>' +
+            '<h3>2.1 Nature of Processing</h3>' +
+            '<p>The ' + esc(agent) + ' agent performs automated processing of personal data in the context of ' + esc(fn) +
+            ' operations. The agent operates at <strong>' + esc(auto) + '</strong> autonomy level with <strong>' + esc(impact) +
+            '</strong> decision impact on data principals.</p>' +
+            '<h3>2.2 Categories of Personal Data</h3>' +
+            '<table class="rpt-tbl"><tr><th>Data Category</th><th>Processing Purpose</th><th>Sensitivity</th></tr>';
+        for (String cat : dataCats.split(',')) {
+            String c = cat.trim();
+            String sens = c.containsIgnoreCase('Aadhaar') ? 'Critical' : (c.containsIgnoreCase('PII') || c.containsIgnoreCase('Financial') ? 'High' : 'Medium');
+            h += '<tr><td>' + esc(c) + '</td><td>' + esc(fn) + ' processing</td><td><span class="' + (sens == 'Critical' ? 'rpt-risk-h' : (sens == 'High' ? 'rpt-risk-m' : 'rpt-risk-l')) + '">' + sens + '</span></td></tr>';
+        }
+        h += '</table>' +
+            '<h3>2.3 Data Principals Affected</h3>' +
+            '<p>Target audience: <strong>' + esc(aud) + '</strong> users.' +
+            (uc.Vulnerable_Customers__c == true ? ' <span class="rpt-tag rpt-tag-red">Vulnerable customers included</span> &mdash; enhanced protections apply per DPDP §9.' : '') + '</p>' +
+            '<h3>2.4 Data Flow</h3>' +
+            '<p>Data flows within the Salesforce multi-tenant environment: Customer data → Salesforce Platform → Einstein Trust Layer (PII masking, toxicity detection) → Agent Processing → Grounded Response → Audit Log. All data remains within the Salesforce trust boundary.</p>';
+
+        h += '<h2>3. Lawful Basis Assessment</h2>' +
+            '<table class="rpt-tbl"><tr><th>Data Category</th><th>Lawful Basis</th><th>DPDP Section</th><th>Justification</th></tr>' +
+            '<tr><td>Identity Data (PII)</td><td>Consent</td><td>§6</td><td>Explicit consent obtained during onboarding with clear purpose specification</td></tr>' +
+            '<tr><td>Financial Data</td><td>Legitimate Use</td><td>§7(a)</td><td>Necessary for performance of services requested by the data principal</td></tr>' +
+            '<tr><td>Transactional Data</td><td>Legitimate Use</td><td>§7(b)</td><td>Compliance with applicable law (RBI record-keeping requirements)</td></tr></table>' +
+            '<div class="rpt-callout"><strong>Consent Mechanism:</strong> Granular opt-in consent captured via digital channel. ' +
+            'Withdrawal mechanism available through customer portal. Consent records maintained with timestamp and version tracking.</div>';
+
+        h += '<h2>4. Data Principal Rights</h2>' +
+            '<table class="rpt-tbl"><tr><th>Right</th><th>DPDP Section</th><th>Implementation</th><th>SLA</th></tr>' +
+            '<tr><td>Right to Access</td><td>§11</td><td>Self-service portal + DPO request channel</td><td>72 hours</td></tr>' +
+            '<tr><td>Right to Correction</td><td>§12</td><td>Online correction request with verification</td><td>15 days</td></tr>' +
+            '<tr><td>Right to Erasure</td><td>§12</td><td>Automated deletion pipeline (excludes regulatory retention)</td><td>30 days</td></tr>' +
+            '<tr><td>Right to Grievance Redressal</td><td>§13</td><td>DPO channel + escalation to Data Protection Board</td><td>30 days</td></tr>' +
+            '<tr><td>Right to Nominate</td><td>§14</td><td>Nomination facility for deceased/incapacitated principals</td><td>On request</td></tr></table>';
+
+        h += '<h2>5. Risk Assessment</h2>' +
+            '<table class="rpt-tbl"><tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Rating</th><th>Mitigation</th></tr>' +
+            '<tr><td>Unauthorized data access</td><td>Low</td><td>High</td><td><span class="rpt-risk-m">Medium</span></td><td>Salesforce FLS + Shield encryption</td></tr>' +
+            '<tr><td>Data breach / exfiltration</td><td>Low</td><td>Critical</td><td><span class="rpt-risk-h">High</span></td><td>Trust Layer masking + event monitoring</td></tr>' +
+            '<tr><td>Algorithmic discrimination</td><td>Medium</td><td>High</td><td><span class="rpt-risk-h">High</span></td><td>Fairness testing + human oversight</td></tr>' +
+            '<tr><td>Purpose creep</td><td>Low</td><td>Medium</td><td><span class="rpt-risk-l">Low</span></td><td>Grounding rules + agent topic boundaries</td></tr>' +
+            '<tr><td>Cross-border data transfer</td><td>Low</td><td>High</td><td><span class="rpt-risk-m">Medium</span></td><td>Salesforce data residency controls</td></tr></table>';
+
+        h += '<h2>6. Security Safeguards</h2>' +
+            '<table class="rpt-tbl"><tr><th>Control</th><th>Standard</th><th>Implementation</th><th>Status</th></tr>' +
+            '<tr><td>Encryption at Rest</td><td>AES-256</td><td>Salesforce Shield Platform Encryption</td><td>' + statusTag('Met') + '</td></tr>' +
+            '<tr><td>Encryption in Transit</td><td>TLS 1.2+</td><td>Platform-enforced for all API calls</td><td>' + statusTag('Met') + '</td></tr>' +
+            '<tr><td>Access Control</td><td>RBAC + FLS</td><td>Profile-based field-level security</td><td>' + statusTag('Met') + '</td></tr>' +
+            '<tr><td>PII Masking</td><td>DPDP §8</td><td>Einstein Trust Layer data masking</td><td>' + statusTag('Met') + '</td></tr>' +
+            '<tr><td>Audit Logging</td><td>CERT-In</td><td>Immutable audit trail with hash chain</td><td>' + statusTag('Met') + '</td></tr>' +
+            '<tr><td>Breach Notification</td><td>DPDP §8</td><td>CERT-In 6-hour reporting integration</td><td>' + statusTag('Met') + '</td></tr></table>';
+
+        h += '<h2>7. Data Retention &amp; Deletion</h2>' +
+            '<table class="rpt-tbl"><tr><th>Data Category</th><th>Retention Period</th><th>Basis</th><th>Deletion Method</th></tr>' +
+            '<tr><td>Financial Records</td><td>8 years</td><td>RBI/2017-18/153</td><td>Automated purge + verification</td></tr>' +
+            '<tr><td>KYC Documents</td><td>5 years post closure</td><td>PMLA Rules 2005</td><td>Secure shredding</td></tr>' +
+            '<tr><td>Consent Records</td><td>Duration of processing + 3 years</td><td>DPDP §6</td><td>Archival then purge</td></tr>' +
+            '<tr><td>Agent Interaction Logs</td><td>2 years</td><td>Internal policy</td><td>Automated deletion</td></tr></table>';
+
+        h += buildEvidenceSection(clauses, '8. Evidence Captured');
+
+        h += '<h2>9. Regulatory Compliance Summary</h2>' +
+            '<table class="rpt-tbl"><tr><th>Regulator</th><th>Clauses</th><th>Met</th><th>Gaps</th></tr>';
+        for (String reg : byReg.keySet()) {
+            List<Clause_Mapping__c> rc = byReg.get(reg);
+            Integer rMet = 0; Integer rGap = 0;
+            for (Clause_Mapping__c cm : rc) {
+                if (cm.Mapping_Status__c == 'Met') rMet++;
+                if (cm.Mapping_Status__c == 'Gap' || cm.Mapping_Status__c == 'Partial') rGap++;
+            }
+            h += '<tr><td><strong>' + esc(reg) + '</strong></td><td>' + rc.size() + '</td><td class="rpt-met">' + rMet + '</td><td class="rpt-gap">' + rGap + '</td></tr>';
+        }
+        h += '</table>';
+
+        if (!gaps.isEmpty()) {
+            h += '<h2>10. Gap Remediation Plan</h2>' +
+                '<table class="rpt-tbl"><tr><th>#</th><th>Clause</th><th>Obligation</th><th>Status</th><th>Target Date</th></tr>';
+            Integer idx = 1;
+            for (Clause_Mapping__c g : gaps) {
+                if (idx > 15) break;
+                String obl = g.Obligation__c != null ? g.Obligation__c : g.Name;
+                h += '<tr><td>' + idx + '</td><td>' + esc(g.Clause_Reference__c) + '</td><td>' + esc(obl) + '</td><td>' + statusTag(g.Mapping_Status__c) + '</td><td>' + Date.today().addDays(30).format() + '</td></tr>';
+                idx++;
+            }
+            h += '</table>';
+        }
+
+        h += '<div class="rpt-sign"><div class="rpt-sign-head">DPIA Sign-Off</div><table>' +
+            '<tr><td class="rpt-sl"><strong>Role</strong></td><td><strong>Signature</strong></td><td><strong>Date</strong></td></tr>' +
+            signRow('Data Protection Officer') + signRow('Chief Information Security Officer') +
+            signRow('Head, AI Governance') + signRow('Chief Compliance Officer') + '</table></div>';
         h += docFooter();
         return h;
     }

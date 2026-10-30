@@ -167,7 +167,6 @@
                                         <div class="chat-question">
                                             <div class="chat-meta">
                                                 <span class="chat-sender">You</span>
-                                                <lightning-badge label={qa.lens} class="chat-lens-badge"></lightning-badge>
                                             </div>
                                             <p class="chat-msg">{qa.question}</p>
                                         </div>
@@ -186,15 +185,6 @@
                         <!-- Input Area -->
                         <div class="ask-ai-input-area">
                             <div class="ask-ai-input-row">
-                                <lightning-combobox
-                                    label="Gate"
-                                    value={selectedAskBriefId}
-                                    options={briefOptions}
-                                    onchange={handleAskBriefChange}
-                                    variant="label-hidden"
-                                    placeholder="Select gate..."
-                                    class="ask-gate-picker">
-                                </lightning-combobox>
                                 <lightning-input
                                     type="text"
                                     label="Question"

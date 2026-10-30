@@ -76,8 +76,8 @@ export default class PramaanAssess extends LightningElement {
                 autonomy: uc.Autonomy__c || 'Human-in-loop',
                 audience: uc.Audience__c || 'Customer',
                 func: uc.Function__c || 'Origination',
-                dataCategories: uc.Data_Categories__c || '',
-                channels: uc.Channels__c || '',
+                dataCategories: uc.Data_Categories__c || 'PII, Financial',
+                channels: uc.Channels__c || 'Web, Mobile',
                 vulnerable: uc.Vulnerable_Customers__c || false
             };
         } catch (e) {

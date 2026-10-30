@@ -53,7 +53,7 @@
 
                 <!-- BOM Stats Row -->
                 <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_medium">
-                    <div class="slds-col slds-size_1-of-3 slds-p-around_xx-small">
+                    <div class="slds-col slds-size_1-of-4 slds-p-around_xx-small">
                         <div class={topicsTileClass} data-tile="topics" onclick={handleBomTileClick}>
                             <div class="bom-number">{scanResult.topicCount}</div>
                             <div class="bom-label">Topics</div>
@@ -65,7 +65,7 @@
                             </template>
                         </div>
                     </div>
-                    <div class="slds-col slds-size_1-of-3 slds-p-around_xx-small">
+                    <div class="slds-col slds-size_1-of-4 slds-p-around_xx-small">
                         <div class={actionsTileClass} data-tile="actions" onclick={handleBomTileClick}>
                             <div class="bom-number">{scanResult.actionCount}</div>
                             <div class="bom-label">Actions</div>
@@ -77,10 +77,28 @@
                             </template>
                         </div>
                     </div>
-                    <div class="slds-col slds-size_1-of-3 slds-p-around_xx-small">
-                        <div class="bom-card">
-                            <div class="bom-number">{inRegionLabel}</div>
-                            <div class="bom-label">In-Region</div>
+                    <div class="slds-col slds-size_1-of-4 slds-p-around_xx-small">
+                        <div class={guardrailsTileClass} data-tile="guardrails" onclick={handleBomTileClick}>
+                            <div class="bom-number">{guardrailCount}</div>
+                            <div class="bom-label">Guardrails</div>
+                            <template if:true={isGuardrailsExpanded}>
+                                <div class="bom-expand-hint">&#9650;</div>
+                            </template>
+                            <template if:false={isGuardrailsExpanded}>
+                                <div class="bom-expand-hint">&#9660;</div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-4 slds-p-around_xx-small">
+                        <div class={dataTileClass} data-tile="data" onclick={handleBomTileClick}>
+                            <div class="bom-number">{scanResult.objectCount}</div>
+                            <div class="bom-label">Data Objects</div>
+                            <template if:true={isDataExpanded}>
+                                <div class="bom-expand-hint">&#9650;</div>
+                            </template>
+                            <template if:false={isDataExpanded}>
+                                <div class="bom-expand-hint">&#9660;</div>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -197,6 +215,41 @@
                     </div>
                 </template>
 
+                <!-- Guardrails Detail Panel -->
+                <template if:true={isGuardrailsExpanded}>
+                    <div class="slds-box slds-m-bottom_medium bom-detail-panel">
+                        <h4 class="slds-text-heading_small slds-m-bottom_small">
+                            <lightning-icon icon-name="utility:shield" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                            Guardrails &amp; Data Handling Instructions
+                        </h4>
+                        <template if:true={hasGuardrails}>
+                            <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_striped">
+                                <thead>
+                                    <tr>
+                                        <th>Rule</th>
+                                        <th>Category</th>
+                                        <th>Severity</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template for:each={guardrailsList} for:item="gr">
+                                        <tr key={gr.id}>
+                                            <td class="slds-text-body_small">{gr.rule}</td>
+                                            <td class="slds-text-body_small"><strong>{gr.category}</strong></td>
+                                            <td><span class={gr.severityClass}>{gr.severity}</span></td>
+                                            <td><span class={gr.statusClass}>{gr.status}</span></td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </template>
+                        <template if:false={hasGuardrails}>
+                            <div class="slds-text-body_small slds-text-color_weak slds-p-around_small">No guardrails configured for this agent.</div>
+                        </template>
+                    </div>
+                </template>
+
                 <!-- Compliance Flags -->
                 <h3 class="slds-text-heading_small slds-m-bottom_small slds-m-top_medium">Compliance Flags</h3>
                 <div class="slds-grid slds-gutters slds-m-bottom_medium">
@@ -292,30 +345,29 @@
                                     Showing findings for: <strong>{selectedToolLabel}</strong>
                                 </div>
                                 <template if:true={hasFilteredFindings}>
-                                    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_striped">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Severity</th>
-                                                <th>Description</th>
-                                                <th>Location</th>
-                                                <th>Developer</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <template for:each={filteredFindings} for:item="finding">
-                                                <tr key={finding.id}>
-                                                    <td class="slds-text-body_small"><strong>{finding.id}</strong></td>
-                                                    <td><span class={finding.severityClass}>{finding.severity}</span></td>
-                                                    <td class="slds-text-body_small">{finding.description}</td>
-                                                    <td class="slds-text-body_small">{finding.file}:{finding.lineNumber}</td>
-                                                    <td class="slds-text-body_small">{finding.developer}</td>
-                                                    <td><span class={finding.statusClass}>{finding.status}</span></td>
-                                                </tr>
+                                    <template for:each={filteredFindings} for:item="finding">
+                                        <div key={finding.id} class="finding-card">
+                                            <div class="finding-header">
+                                                <span class="finding-id">{finding.id}</span>
+                                                <span class={finding.severityClass}>{finding.severity}</span>
+                                                <span class={finding.statusClass}>{finding.status}</span>
+                                            </div>
+                                            <div class="finding-desc">{finding.description}</div>
+                                            <div class="finding-meta">
+                                                <span class="finding-location">{finding.file}:{finding.lineNumber}</span>
+                                                <span class="finding-developer">{finding.developer}</span>
+                                            </div>
+                                            <template if:true={finding.suggestedFix}>
+                                                <div class="finding-fix">
+                                                    <div class="finding-fix-header">
+                                                        <lightning-icon icon-name="utility:magicwand" size="xx-small" class="fix-icon"></lightning-icon>
+                                                        <span>Suggested Fix</span>
+                                                    </div>
+                                                    <div class="finding-fix-text">{finding.suggestedFix}</div>
+                                                </div>
                                             </template>
-                                        </tbody>
-                                    </table>
+                                        </div>
+                                    </template>
                                 </template>
                                 <template if:false={hasFilteredFindings}>
                                     <div class="scan-no-findings">

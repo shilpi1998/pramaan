@@ -45,6 +45,10 @@ export default class PramaanApp extends LightningElement {
 
     handleGenerateComplete() {
         this.activeTab = 'filing';
+        setTimeout(() => {
+            const filingCenter = this.template.querySelector('c-pramaan-filing-center');
+            if (filingCenter) filingCenter.refreshDocuments();
+        }, 100);
     }
 
     handleFileComplete() {

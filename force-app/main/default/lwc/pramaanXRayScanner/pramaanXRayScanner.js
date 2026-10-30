@@ -86,6 +86,7 @@ export default class PramaanXRayScanner extends LightningElement {
     get isTopicsExpanded() { return this.expandedBomTile === 'topics'; }
     get isActionsExpanded() { return this.expandedBomTile === 'actions'; }
     get isDataExpanded() { return this.expandedBomTile === 'data'; }
+    get isGuardrailsExpanded() { return this.expandedBomTile === 'guardrails'; }
 
     get topicsTileClass() {
         return 'bom-card bom-card-clickable' + (this.isTopicsExpanded ? ' bom-card-active' : '');
@@ -95,6 +96,33 @@ export default class PramaanXRayScanner extends LightningElement {
     }
     get dataTileClass() {
         return 'bom-card bom-card-clickable' + (this.isDataExpanded ? ' bom-card-active' : '');
+    }
+    get guardrailsTileClass() {
+        return 'bom-card bom-card-clickable' + (this.isGuardrailsExpanded ? ' bom-card-active' : '');
+    }
+
+    get guardrailCount() { return this.guardrailsList.length; }
+    get hasGuardrails() { return this.guardrailsList.length > 0; }
+    get guardrailsList() {
+        if (!this.scanResult) return [];
+        return [
+            { id: 'g1', rule: 'Do not store Aadhaar numbers in plain text', category: 'UIDAI Compliance', severity: 'Critical', status: 'Enforced',
+              severityClass: 'scan-sev scan-sev-critical', statusClass: 'guardrail-status guardrail-enforced' },
+            { id: 'g2', rule: 'Mask PAN numbers after first 4 characters in all responses', category: 'Data Masking', severity: 'High', status: 'Enforced',
+              severityClass: 'scan-sev scan-sev-high', statusClass: 'guardrail-status guardrail-enforced' },
+            { id: 'g3', rule: 'Do not share customer KYC data across agent sessions', category: 'Data Isolation', severity: 'High', status: 'Enforced',
+              severityClass: 'scan-sev scan-sev-high', statusClass: 'guardrail-status guardrail-enforced' },
+            { id: 'g4', rule: 'Log every identity verification attempt to audit trail', category: 'Audit', severity: 'Medium', status: 'Enforced',
+              severityClass: 'scan-sev scan-sev-medium', statusClass: 'guardrail-status guardrail-enforced' },
+            { id: 'g5', rule: 'Escalate to human agent if confidence below 85%', category: 'Human Oversight', severity: 'Medium', status: 'Enforced',
+              severityClass: 'scan-sev scan-sev-medium', statusClass: 'guardrail-status guardrail-enforced' },
+            { id: 'g6', rule: 'Retain KYC documents for minimum 5 years per RBI direction', category: 'Retention', severity: 'High', status: 'Configured',
+              severityClass: 'scan-sev scan-sev-high', statusClass: 'guardrail-status guardrail-configured' },
+            { id: 'g7', rule: 'Block cross-border data transfer of financial PII', category: 'Data Residency', severity: 'Critical', status: 'Enforced',
+              severityClass: 'scan-sev scan-sev-critical', statusClass: 'guardrail-status guardrail-enforced' },
+            { id: 'g8', rule: 'Obtain explicit consent before processing biometric data', category: 'DPDP Act', severity: 'Critical', status: 'Configured',
+              severityClass: 'scan-sev scan-sev-critical', statusClass: 'guardrail-status guardrail-configured' }
+        ];
     }
 
     get hasTopics() { return this.scanResult?.topics?.length > 0; }

@@ -341,6 +341,7 @@ public with sharing class PramaanXRay {
         @AuraEnabled public String developer;
         @AuraEnabled public String status;
         @AuraEnabled public String badgeClass;
+        @AuraEnabled public String suggestedFix;
     }
 
     public class ScanToolResult {
@@ -382,34 +383,42 @@ public with sharing class PramaanXRay {
         retireJs.icon = 'utility:package';
 
         if (hasIssues) {
-            addFinding(result, 'PRIZM-001', 'Prizm Security Scanner', 'Medium', 'Data Exposure',
-                'SOQL query returns all fields without explicit field list — potential data leakage in API response',
-                'classes/AgentActionHandler.cls', 142, 'developer1@bank.com', 'Open');
-            addFinding(result, 'PRIZM-002', 'Prizm Security Scanner', 'Low', 'Code Quality',
-                'Debug statement left in production code — may expose internal state in debug logs',
-                'classes/AgentTopicRouter.cls', 89, 'developer2@bank.com', 'Open');
+            addFinding(result, 'PRIZM-001', 'Prizm Security Scanner', 'High', 'Data Exposure',
+                'Aadhaar number returned unmasked in agent response — violates UIDAI masking mandate',
+                'classes/KYCVerificationHandler.cls', 87, 'developer1@bank.com', 'Open',
+                'Apply UIDAI masking: show only last 4 digits (XXXX-XXXX-1234). Use StringUtils.maskAadhaar() before returning to agent output.');
+            addFinding(result, 'PRIZM-002', 'Prizm Security Scanner', 'Medium', 'Data Retention',
+                'Customer KYC documents stored without retention policy tag — non-compliant with RBI 5-year retention rule',
+                'classes/KYCDocumentService.cls', 134, 'developer2@bank.com', 'Open',
+                'Add Retention_Policy__c = "RBI_5Y" on ContentVersion insert. Configure retention rule in Setup > Data Policies.');
             addFinding(result, 'SCA-001', 'Salesforce Code Analyzer', 'High', 'Security',
-                'Apex class runs without sharing — agent actions may bypass record-level security',
-                'classes/AgentDataService.cls', 1, 'developer1@bank.com', 'Open');
-            addFinding(result, 'PMD-001', 'PMD / ApexPMD', 'Low', 'Best Practice',
-                'Method exceeds 40 lines — consider refactoring for maintainability',
-                'classes/AgentFlowOrchestrator.cls', 55, 'developer3@bank.com', 'Acknowledged');
+                'Apex class runs without sharing — agent may access KYC records across customer boundaries',
+                'classes/AgentDataService.cls', 1, 'developer1@bank.com', 'Open',
+                'Change class declaration to "with sharing". Agent actions must respect org sharing model to prevent cross-customer data leakage.');
+            addFinding(result, 'SCA-002', 'Salesforce Code Analyzer', 'Medium', 'Consent',
+                'Biometric verification triggered without checking DPDP consent flag on Contact record',
+                'classes/BiometricVerifyAction.cls', 42, 'developer3@bank.com', 'Open',
+                'Add guard: if (!contact.DPDP_Consent_Given__c) throw new ConsentException("Explicit consent required under DPDP Act Section 6").');
+            addFinding(result, 'PMD-001', 'PMD / ApexPMD', 'Low', 'Audit',
+                'Agent decision outcome not logged to audit trail — compliance review cannot trace this step',
+                'classes/AgentFlowOrchestrator.cls', 55, 'developer3@bank.com', 'Acknowledged',
+                'Call PramaanAudit.logEvent() after each decision branch. Include agent name, decision, confidence score, and timestamp.');
 
             prizm.status = 'Issues Found';
             prizm.findings = 2;
             codeAnalyzer.status = 'Issues Found';
-            codeAnalyzer.findings = 1;
+            codeAnalyzer.findings = 2;
             pmd.status = 'Issues Found';
             pmd.findings = 1;
             retireJs.status = 'Clean';
             retireJs.findings = 0;
 
             result.overallStatus = 'Issues Found';
-            result.totalFindings = 4;
+            result.totalFindings = 5;
             result.criticalCount = 0;
-            result.highCount = 1;
-            result.mediumCount = 1;
-            result.lowCount = 2;
+            result.highCount = 2;
+            result.mediumCount = 2;
+            result.lowCount = 1;
         } else {
             prizm.status = 'Clean';
             prizm.findings = 0;
@@ -436,7 +445,7 @@ public with sharing class PramaanXRay {
     }
 
     private static void addFinding(CodeScanResult result, String id, String tool, String severity,
-            String category, String description, String file, Integer lineNumber, String developer, String status) {
+            String category, String description, String file, Integer lineNumber, String developer, String status, String suggestedFix) {
         CodeScanFinding f = new CodeScanFinding();
         f.id = id;
         f.tool = tool;
@@ -447,6 +456,7 @@ public with sharing class PramaanXRay {
         f.lineNumber = lineNumber;
         f.developer = developer;
         f.status = status;
+        f.suggestedFix = suggestedFix;
         result.findings.add(f);
     }
 

@@ -1,94 +1,136 @@
 <template>
-    <lightning-card title="Step 5: Go-Live Passport" icon-name="standard:endorsement">
-        <div class="slds-p-around_medium">
-            <template if:true={isLoading}>
-                <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
-            </template>
+    <div class="pp-wrapper">
+        <template if:true={isLoading}>
+            <div class="slds-align_absolute-center slds-p-around_large">
+                <lightning-spinner alternative-text="Loading passport..." size="medium"></lightning-spinner>
+            </div>
+        </template>
 
-            <template if:false={isLoading}>
-                <template if:true={passport}>
-                    <div class="passport-container">
-                        <div class="passport-header">
-                            <lightning-icon icon-name="standard:endorsement" size="large"></lightning-icon>
-                            <h2 class="slds-text-heading_large slds-m-left_medium">Go-Live Passport</h2>
+        <template if:false={isLoading}>
+            <template if:true={hasPassport}>
+                <div class="pp-card">
+                    <!-- Status Banner -->
+                    <div class={statusBannerClass}>
+                        <template if:true={isPassed}>
+                            <lightning-icon icon-name="utility:check" size="xx-small" class="pp-banner-icon"></lightning-icon>
+                        </template>
+                        <template if:false={isPassed}>
+                            <lightning-icon icon-name="utility:clock" size="xx-small" class="pp-banner-icon"></lightning-icon>
+                        </template>
+                        <span>{statusLabel}</span>
+                    </div>
+
+                    <!-- Header -->
+                    <div class="pp-header">
+                        <div class="pp-header-top">
+                            <div class="pp-org-label">AI GOVERNANCE COMPLIANCE PASSPORT</div>
+                            <span class={riskTierClass}>{riskTier} Risk</span>
                         </div>
+                        <h2 class="pp-agent-name">{agentName}</h2>
+                        <template if:true={hasPassportNumber}>
+                            <div class="pp-passport-num">{passport.Passport_Number__c}</div>
+                        </template>
+                    </div>
 
-                        <div class="passport-body">
-                            <div class="passport-number">
-                                <span class="passport-label">Passport Number</span>
-                                <span class="passport-value">{passport.Passport_Number__c}</span>
-                            </div>
+                    <!-- Summary -->
+                    <div class="pp-summary">
+                        <p>{passportSummary}</p>
+                    </div>
 
-                            <div class="slds-grid slds-gutters slds-wrap slds-m-top_medium">
-                                <div class="slds-col slds-size_1-of-2 slds-p-around_small">
-                                    <dl>
-                                        <dt class="slds-text-color_weak">Pack</dt>
-                                        <dd class="slds-text-heading_small">{passport.Name}</dd>
-                                    </dl>
-                                </div>
-                                <div class="slds-col slds-size_1-of-2 slds-p-around_small">
-                                    <dl>
-                                        <dt class="slds-text-color_weak">Version</dt>
-                                        <dd class="slds-text-heading_small">{passport.Version__c}</dd>
-                                    </dl>
-                                </div>
-                                <div class="slds-col slds-size_1-of-2 slds-p-around_small">
-                                    <dl>
-                                        <dt class="slds-text-color_weak">Status</dt>
-                                        <dd class="slds-text-heading_small">{passport.Pack_Status__c}</dd>
-                                    </dl>
-                                </div>
-                                <div class="slds-col slds-size_1-of-2 slds-p-around_small">
-                                    <dl>
-                                        <dt class="slds-text-color_weak">Issued</dt>
-                                        <dd class="slds-text-heading_small">{passport.Passport_Issued_At__c}</dd>
-                                    </dl>
-                                </div>
-                                <div class="slds-col slds-size_1-of-2 slds-p-around_small">
-                                    <dl>
-                                        <dt class="slds-text-color_weak">Clauses Met</dt>
-                                        <dd class="slds-text-heading_small">{passport.Clauses_Met__c} / {passport.Clauses_Total__c}</dd>
-                                    </dl>
-                                </div>
-                                <div class="slds-col slds-size_1-of-2 slds-p-around_small">
-                                    <dl>
-                                        <dt class="slds-text-color_weak">Gates</dt>
-                                        <dd class="slds-text-heading_small">{passport.Gates_Approved__c} / {passport.Gates_Required__c}</dd>
-                                    </dl>
-                                </div>
-                            </div>
-
-                            <div class="passport-hash slds-m-top_medium">
-                                <span class="slds-text-body_small slds-text-color_weak">Approved Config Hash (SHA-256):</span>
-                                <code class="slds-m-left_x-small">{passport.Approved_Hash__c}</code>
-                            </div>
+                    <!-- Stats Row -->
+                    <div class="pp-stats">
+                        <div class="pp-stat">
+                            <div class="pp-stat-num">{approvedCount}/{totalGates}</div>
+                            <div class="pp-stat-label">Gates Cleared</div>
                         </div>
+                        <div class="pp-stat">
+                            <div class="pp-stat-num">{clausesMet}/{clausesTotal}</div>
+                            <div class="pp-stat-label">Clauses Met</div>
+                        </div>
+                        <div class="pp-stat">
+                            <div class="pp-stat-num">{totalEvents}</div>
+                            <div class="pp-stat-label">Audit Events</div>
+                        </div>
+                    </div>
 
-                        <template if:true={chainResult}>
-                            <div class="passport-footer slds-m-top_medium">
-                                <template if:true={chainResult.verified}>
-                                    <div class="chain-verified">
-                                        <lightning-icon icon-name="utility:check" variant="success" size="small"></lightning-icon>
-                                        <span class="slds-m-left_x-small">Audit chain verified ({chainResult.totalEvents} events, tamper-free)</span>
-                                    </div>
+                    <!-- Gate Approvals -->
+                    <div class="pp-gates">
+                        <div class="pp-gates-title">Governance Gate Sign-Off</div>
+                        <template for:each={gatesList} for:item="gate">
+                            <div key={gate.id} class={gate.rowClass}>
+                                <lightning-icon icon-name={gate.icon} size="xx-small" class="pp-gate-icon"></lightning-icon>
+                                <span class="pp-gate-lens">{gate.lens}</span>
+                                <template if:true={gate.isApproved}>
+                                    <span class="pp-gate-reviewer">{gate.reviewer}</span>
+                                    <span class="pp-gate-date">{gate.date}</span>
                                 </template>
-                                <template if:false={chainResult.verified}>
-                                    <div class="chain-broken">
-                                        <lightning-icon icon-name="utility:error" variant="error" size="small"></lightning-icon>
-                                        <span class="slds-m-left_x-small">Chain broken at event #{chainResult.brokenAt}</span>
-                                    </div>
+                                <template if:false={gate.isApproved}>
+                                    <span class="pp-gate-pending-label">Pending</span>
                                 </template>
                             </div>
                         </template>
                     </div>
-                </template>
 
-                <template if:false={passport}>
-                    <div class="slds-align_absolute-center slds-p-around_large">
-                        <p class="slds-text-color_weak">No passport issued yet. All review gates must be approved first.</p>
+                    <!-- Chain Verification -->
+                    <div class="pp-chain">
+                        <template if:true={chainVerified}>
+                            <div class="pp-chain-ok">
+                                <lightning-icon icon-name="utility:shield" size="xx-small" class="pp-chain-icon"></lightning-icon>
+                                Audit chain integrity verified — {totalEvents} events, tamper-free
+                            </div>
+                        </template>
+                        <template if:false={chainVerified}>
+                            <div class="pp-chain-warn">
+                                <lightning-icon icon-name="utility:warning" size="xx-small" class="pp-chain-icon"></lightning-icon>
+                                Audit chain not yet verified
+                            </div>
+                        </template>
                     </div>
-                </template>
+
+                    <!-- Case Summary Ticket -->
+                    <div class="pp-case-ticket">
+                        <div class="pp-case-ticket-header">
+                            <div class="pp-case-ticket-title-row">
+                                <lightning-icon icon-name="standard:case_wrap_up" size="x-small" class="pp-case-ticket-icon"></lightning-icon>
+                                <span class="pp-case-ticket-title">Case Brief</span>
+                            </div>
+                            <span class={caseTicketStatusClass}>{caseTicketStatusLabel}</span>
+                        </div>
+                        <div class="pp-case-ticket-body">
+                            <p class="pp-case-ticket-text">{caseBriefText}</p>
+                        </div>
+                        <div class="pp-case-ticket-meta">
+                            <div class="pp-case-meta-item">
+                                <span class="pp-case-meta-label">Frameworks</span>
+                                <span class="pp-case-meta-value">{frameworksList}</span>
+                            </div>
+                            <div class="pp-case-meta-item">
+                                <span class="pp-case-meta-label">Workflow</span>
+                                <span class="pp-case-meta-value">X-Ray &rarr; Risk DNA &rarr; Clause Map &rarr; Filing &rarr; Review &rarr; Passport</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="pp-footer">
+                        <template if:true={issuedDate}>
+                            <div class="pp-footer-line">Issued: {issuedDate}</div>
+                        </template>
+                        <template if:true={hasConfigHash}>
+                            <div class="pp-footer-hash">SHA-256: {configHash}</div>
+                        </template>
+                        <div class="pp-footer-brand">Pramaan &mdash; Proof, Not Paperwork</div>
+                    </div>
+                </div>
             </template>
-        </div>
-    </lightning-card>
+
+            <template if:false={hasPassport}>
+                <div class="pp-empty">
+                    <lightning-icon icon-name="utility:lock" size="large" class="pp-empty-icon"></lightning-icon>
+                    <h3 class="pp-empty-title">Passport Not Yet Issued</h3>
+                    <p class="pp-empty-text">All review gates must be approved before a compliance passport can be issued for this agent.</p>
+                </div>
+            </template>
+        </template>
+    </div>
 </template>

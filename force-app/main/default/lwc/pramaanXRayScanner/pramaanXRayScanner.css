@@ -221,3 +221,79 @@
 .scan-status-open { background: #fde8e8; color: #c23934; }
 .scan-status-acknowledged { background: #fff8e1; color: #b8860b; }
 .scan-status-resolved { background: #e6f7e6; color: #2e844a; }
+
+.guardrail-status {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.guardrail-enforced { background: #e6f7e6; color: #2e844a; }
+.guardrail-configured { background: #eef4ff; color: #0070d2; }
+
+.finding-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    border-left: 4px solid #e5e5e5;
+}
+.finding-card:has(.scan-sev-critical) { border-left-color: #c23934; }
+.finding-card:has(.scan-sev-high) { border-left-color: #e3522e; }
+.finding-card:has(.scan-sev-medium) { border-left-color: #ff9a3c; }
+
+.finding-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.375rem;
+}
+.finding-id {
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #032d60;
+}
+.finding-desc {
+    font-size: 0.8125rem;
+    color: #3e3e3c;
+    line-height: 1.4;
+    margin-bottom: 0.375rem;
+}
+.finding-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.7rem;
+    color: #706e6b;
+}
+.finding-location {
+    font-family: 'SF Mono', 'Consolas', monospace;
+}
+.finding-fix {
+    margin-top: 0.625rem;
+    padding: 0.5rem 0.75rem;
+    background: #f0f7ff;
+    border: 1px solid #c9daf8;
+    border-radius: 6px;
+}
+.finding-fix-header {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #2b5797;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
+}
+.fix-icon {
+    --sds-c-icon-color-foreground-default: #2b5797;
+}
+.finding-fix-text {
+    font-size: 0.8125rem;
+    color: #3e3e3c;
+    line-height: 1.5;
+}

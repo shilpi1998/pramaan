@@ -54,6 +54,13 @@ export default class PramaanFilingCenter extends LightningElement {
         if (value) this.loadDocuments();
     }
 
+    @api
+    refreshDocuments() {
+        this.selectedDocId = null;
+        this._renderedDocId = null;
+        if (this._packId) this.loadDocuments();
+    }
+
     async loadDocuments() {
         if (!this._packId) return;
         this.isLoading = true;
