@@ -254,11 +254,12 @@ public with sharing class PramaanController {
         return PramaanGovernanceService.getReviewQAs(briefId);
     }
 
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static Map<String, Object> getPassportInfo(Id packId) {
         Governance_Pack__c pack = [
             SELECT Id, Name, Pack_Status__c, Passport_Number__c, Passport_Issued_At__c,
                    Approved_Hash__c, Gates_Required__c, Gates_Approved__c,
+                   Clauses_Met__c, Clauses_Total__c, Clauses_Gap__c,
                    AI_Use_Case__r.Name, AI_Use_Case__r.Risk_Tier__c,
                    AI_Use_Case__r.Agent_API_Name__c,
                    Agent_Snapshot__r.Snapshot_Hash__c

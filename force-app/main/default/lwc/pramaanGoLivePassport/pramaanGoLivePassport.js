@@ -16,6 +16,11 @@ export default class PramaanGoLivePassport extends LightningElement {
         if (value) this.loadPassport();
     }
 
+    @api
+    refreshPassport() {
+        if (this._packId) this.loadPassport();
+    }
+
     async loadPassport() {
         if (!this._packId) return;
         this.isLoading = true;
@@ -122,20 +127,18 @@ export default class PramaanGoLivePassport extends LightningElement {
         const tier = this.riskTier;
         const clauses = this.clausesMet;
         const total = this.clausesTotal;
+        const gates = this.approvedCount;
+        const totalGates = this.totalGates;
 
         if (this.isPassed) {
-            return name + ', classified as ' + tier + ' risk, underwent a full governance lifecycle — ' +
-                'agent capabilities were scanned, risk DNA profiled across 9 dimensions, and ' +
-                clauses + ' of ' + total + ' applicable regulatory clauses were mapped and evidenced. ' +
-                'All governance gates were reviewed and approved. The agent is cleared for production.';
+            return 'The ' + name + ' has successfully completed its AI governance review. ' +
+                'Assessed as ' + tier + ' risk, it passed all ' + totalGates + ' independent review gates ' +
+                'and ' + (total > 0 ? total : 'all applicable') + ' regulatory clauses across RBI, DPDP Act, and CERT-In ' +
+                'have been mapped and evidenced. Cleared for production deployment.';
         }
-        return name + ' (' + tier + ' risk) is undergoing governance review. ' +
-            'Agent scan and risk assessment are complete. ' +
-            clauses + ' of ' + total + ' clauses mapped so far. Gate approvals are in progress.';
-    }
-
-    get frameworksList() {
-        return 'RBI IT Gov · DPDP Act 2023 · CERT-In · UIDAI · SEBI AI';
+        return 'The ' + name + ' is currently under AI governance review. ' +
+            'Classified as ' + tier + ' risk, it requires sign-off from ' + totalGates + ' review gates. ' +
+            (gates > 0 ? gates + ' of ' + totalGates + ' gates cleared so far.' : 'Review is in progress.');
     }
 
     get issuedDate() {

@@ -9,6 +9,12 @@ export default class PramaanApp extends LightningElement {
 
     handleTabChange(event) {
         this.activeTab = event.target.value;
+        if (this.activeTab === 'passport') {
+            setTimeout(() => {
+                const passport = this.template.querySelector('c-pramaan-go-live-passport');
+                if (passport) passport.refreshPassport();
+            }, 100);
+        }
     }
 
     async handleLaunchFlow(event) {

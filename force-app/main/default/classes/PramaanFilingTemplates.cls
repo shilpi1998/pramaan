@@ -66,13 +66,10 @@ public with sharing class PramaanFilingTemplates {
         List<String> required = new List<String>();
 
         required.add('BOARD_NOTE');
+        required.add('DPIA');
 
         if (applicableRegulators.contains('RBI')) {
             required.add('AI_RISK_COMMITTEE');
-        }
-
-        if (applicableRegulators.contains('MeitY')) {
-            required.add('DPIA');
         }
 
         if (applicableRegulators.contains('RBI') &&
