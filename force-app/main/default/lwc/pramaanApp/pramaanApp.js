@@ -64,4 +64,11 @@ export default class PramaanApp extends LightningElement {
             if (reviewer) reviewer.refreshBriefs();
         }, 100);
     }
+
+    handleDecisionComplete() {
+        const passport = this.template.querySelector('c-pramaan-go-live-passport');
+        if (passport) passport.refreshPassport();
+        const audit = this.template.querySelector('c-pramaan-audit-trail');
+        if (audit && audit.refreshTrail) audit.refreshTrail();
+    }
 }

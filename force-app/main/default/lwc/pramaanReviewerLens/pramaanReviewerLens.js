@@ -207,7 +207,10 @@ export default class PramaanReviewerLens extends LightningElement {
 
         try {
             await recordDecision({ briefId, decision, comments });
-            this.loadBriefs();
+            await this.loadBriefs();
+            this.dispatchEvent(new CustomEvent('decisioncomplete', {
+                detail: { decision }
+            }));
         } catch (e) {
             console.error('Decision error:', e);
         }

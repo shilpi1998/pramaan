@@ -42,7 +42,7 @@
                 <c-pramaan-filing-center pack-id={selectedPackId}></c-pramaan-filing-center>
             </lightning-tab>
             <lightning-tab label="Review Gates" value="review" icon-name="standard:approval">
-                <c-pramaan-reviewer-lens pack-id={selectedPackId}></c-pramaan-reviewer-lens>
+                <c-pramaan-reviewer-lens pack-id={selectedPackId} ondecisioncomplete={handleDecisionComplete}></c-pramaan-reviewer-lens>
             </lightning-tab>
             <lightning-tab label="Compliance Passport" value="passport" icon-name="standard:endorsement">
                 <c-pramaan-go-live-passport pack-id={selectedPackId}></c-pramaan-go-live-passport>
