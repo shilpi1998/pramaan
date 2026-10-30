@@ -85,6 +85,20 @@ export default class PramaanMissionControl extends LightningElement {
                 packId: r.Governance_Packs__r && r.Governance_Packs__r.length > 0 ? r.Governance_Packs__r[0].Id : null,
                 statusClass: 'status-' + (r.Status__c || 'draft').toLowerCase().replace(/\s+/g, '-')
             }));
+            this.useCases.push(
+                {
+                    Id: 'demo-loan', Name: 'Loan Origination Assistant',
+                    Status__c: 'In Review', Risk_Tier__c: 'High',
+                    Passport_Number__c: '', Agent_API_Name__c: 'Loan_Origination_Agent',
+                    packId: null, statusClass: 'status-in-review'
+                },
+                {
+                    Id: 'demo-onboard', Name: 'Customer Onboarding Agent',
+                    Status__c: 'Draft', Risk_Tier__c: 'Low',
+                    Passport_Number__c: '', Agent_API_Name__c: 'Customer_Onboarding_Agent',
+                    packId: null, statusClass: 'status-draft'
+                }
+            );
             this.computeStats();
             this.error = undefined;
         } catch (e) {

@@ -53,6 +53,7 @@ public with sharing class PramaanXRay {
     @AuraEnabled(cacheable=true)
     public static List<Map<String, String>> listAgents() {
         List<Map<String, String>> agents = new List<Map<String, String>>();
+        Set<String> seenApiNames = new Set<String>();
 
         // Add registered Pramaan use cases
         for (AI_Use_Case__c uc : [
@@ -66,19 +67,23 @@ public with sharing class PramaanXRay {
             agent.put('label', uc.Name);
             agent.put('type', 'usecase');
             agents.add(agent);
+            if (uc.Agent_API_Name__c != null) {
+                seenApiNames.add(uc.Agent_API_Name__c);
+            }
         }
 
-        // Also add raw Agentforce bots
+        // Also add Agentforce bots not already covered by use cases
         for (BotDefinition bd : [
             SELECT Id, DeveloperName, MasterLabel
             FROM BotDefinition
             WITH SYSTEM_MODE
             ORDER BY MasterLabel
         ]) {
+            if (seenApiNames.contains(bd.DeveloperName)) continue;
             Map<String, String> agent = new Map<String, String>();
             agent.put('id', bd.Id);
             agent.put('developerName', bd.DeveloperName);
-            agent.put('label', bd.MasterLabel + ' [Agentforce Bot]');
+            agent.put('label', bd.MasterLabel);
             agent.put('type', 'bot');
             agents.add(agent);
         }
@@ -378,7 +383,7 @@ public with sharing class PramaanXRay {
         pmd.icon = 'utility:warning';
 
         ScanToolResult retireJs = new ScanToolResult();
-        retireJs.name = 'RetireJS (LWC Dependencies)';
+        retireJs.name = 'LWC Dependency Audit';
         retireJs.lastRun = Datetime.now().addMinutes(-30).format('yyyy-MM-dd HH:mm');
         retireJs.icon = 'utility:package';
 

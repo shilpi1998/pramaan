@@ -16,6 +16,7 @@ export default class PramaanAssess extends LightningElement {
     @track riskResult;
     @track llmAnalysis;
     @track dna = {};
+    @track agentDescription = 'This AI agent automates KYC (Know Your Customer) verification for bank customers. It validates identity documents, performs PEP/sanctions screening, checks against RBI watchlists, and generates compliance reports. The agent processes customer onboarding applications and flags high-risk profiles for manual review.';
     subSectorOptions = [
         { label: 'Scheduled Commercial Bank (SCB)', value: 'SCB' },
         { label: 'Small Finance Bank (SFB)', value: 'SFB' },
@@ -73,7 +74,7 @@ export default class PramaanAssess extends LightningElement {
             this.dna = {
                 subSector: uc.Sub_Sector__c || 'SCB',
                 decisionImpact: uc.Decision_Impact__c || 'Advisory',
-                autonomy: uc.Autonomy__c || 'Human-in-loop',
+                autonomy: uc.Autonomy__c || 'Human-on-loop',
                 audience: uc.Audience__c || 'Customer',
                 func: uc.Function__c || 'Origination',
                 dataCategories: uc.Data_Categories__c || 'PII, Financial',
@@ -105,6 +106,10 @@ export default class PramaanAssess extends LightningElement {
 
     handleVulnerableChange(event) {
         this.dna = { ...this.dna, vulnerable: event.target.checked };
+    }
+
+    handleDescriptionChange(event) {
+        this.agentDescription = event.target.value;
     }
 
     async saveDnaChanges() {

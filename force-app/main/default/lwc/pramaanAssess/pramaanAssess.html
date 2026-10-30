@@ -23,6 +23,18 @@
                             Review and edit before running the assessment.
                         </p>
 
+                        <!-- Agent Description -->
+                        <div class="slds-m-bottom_medium">
+                            <lightning-textarea
+                                label="Agent Description"
+                                value={agentDescription}
+                                onchange={handleDescriptionChange}
+                                placeholder="Describe what this AI agent does, its purpose, and key capabilities..."
+                                max-length="1000"
+                                disabled={isEditing}>
+                            </lightning-textarea>
+                        </div>
+
                         <!-- DNA Grid -->
                         <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_medium">
                             <div class="slds-col slds-size_1-of-3 slds-p-bottom_small">
@@ -157,14 +169,8 @@
                             </div>
                         </div>
 
-                        <!-- Save & Assess buttons -->
-                        <div class="slds-grid slds-grid_align-spread slds-m-top_medium">
-                            <lightning-button
-                                label="Save DNA Changes"
-                                variant="neutral"
-                                icon-name="utility:save"
-                                onclick={saveDnaChanges}>
-                            </lightning-button>
+                        <!-- Assess button -->
+                        <div class="slds-grid slds-grid_align-end slds-m-top_medium">
                             <lightning-button
                                 label="Run Risk Assessment"
                                 variant="brand"
